@@ -30,10 +30,52 @@
     "title": "Le mie cartelle",
     "description": "Organizza tutte le tue cartelle del bingo in un unico posto",
     "newCard": "Nuova cartella",
+    "loading": "Caricamento cartelle...",
+    "createdAt": "Creata il {{date}}",
+    "searchPlaceholder": "Cerca cartella...",
+    "noSearchResults": "Nessuna cartella trovata.",
+    "actions": {
+      "edit": "Modifica cartella",
+      "duplicate": "Duplica cartella",
+      "delete": "Elimina cartella",
+      "deleteConfirmation": "Vuoi davvero eliminare \"{{name}}\"? Questa azione non può essere annullata.",
+      "cancel": "Annulla",
+      "confirmDelete": "Elimina",
+      "deleting": "Eliminazione...",
+      "duplicateError": "Impossibile duplicare la cartella.",
+      "deleteError": "Impossibile eliminare la cartella."
+    },
+    "edit": {
+      "title": "Modifica cartella",
+      "description": "Modifica il nome o i numeri della cartella.",
+      "save": "Salva modifiche",
+      "notFound": "Cartella non trovata."
+    },
     "empty": {
       "title": "Nessuna cartella registrata",
       "description": "Aggiungi la tua prima cartella per iniziare a seguire i numeri estratti nelle tue partite.",
       "addCard": "Aggiungi cartella"
+    },
+    "new": {
+      "back": "Torna alle cartelle",
+      "title": "Nuova cartella",
+      "description": "Inserisci i numeri della tua cartella del bingo",
+      "name": "Nome della cartella",
+      "namePlaceholder": "Es.: Cartella fortunata",
+      "cardNumbers": "Numeri della cartella",
+      "instructions": "Tocca una casella per scegliere un numero.",
+      "free": "LIBERO",
+      "nameRequired": "Inserisci il nome della cartella.",
+      "saveError": "Impossibile salvare la cartella. Riprova.",
+      "chooseNumber": "Scegli un numero",
+      "columnRange": "Colonna {{column}} · da {{min}} a {{max}}",
+      "removeNumber": "Rimuovi numero",
+      "selectPosition": "Seleziona il numero per la posizione {{position}}",
+      "remaining_one": "{{count}} casella rimanente",
+      "remaining_other": "{{count}} caselle rimanenti",
+      "clear": "Svuota cartella",
+      "cancel": "Annulla",
+      "save": "Salva cartella"
     }
   },
   "bingos": {

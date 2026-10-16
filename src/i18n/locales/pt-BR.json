@@ -30,10 +30,52 @@
     "title": "Minhas cartelas",
     "description": "Organize suas cartelas em um só lugar",
     "newCard": "Nova cartela",
+    "loading": "Carregando cartelas...",
+    "createdAt": "Criada em {{date}}",
+    "searchPlaceholder": "Buscar cartela...",
+    "noSearchResults": "Nenhuma cartela encontrada.",
+    "actions": {
+      "edit": "Editar cartela",
+      "duplicate": "Duplicar cartela",
+      "delete": "Excluir cartela",
+      "deleteConfirmation": "Tem certeza que deseja excluir \"{{name}}\"? Esta ação não poderá ser desfeita.",
+      "cancel": "Cancelar",
+      "confirmDelete": "Excluir",
+      "deleting": "Excluindo...",
+      "duplicateError": "Não foi possível duplicar a cartela.",
+      "deleteError": "Não foi possível excluir a cartela."
+    },
+    "edit": {
+      "title": "Editar cartela",
+      "description": "Altere o nome ou os números da cartela.",
+      "save": "Salvar alterações",
+      "notFound": "Cartela não encontrada."
+    },
     "empty": {
       "title": "Nenhuma cartela cadastrada",
       "description": "Cadastre sua primeira cartela para começar a acompanhar os números sorteados nos seus bingos.",
       "addCard": "Adicionar cartela"
+    },
+    "new": {
+      "back": "Voltar para cartelas",
+      "title": "Nova cartela",
+      "description": "Cadastre os números da sua cartela de bingo",
+      "name": "Nome da cartela",
+      "namePlaceholder": "Ex.: Cartela da sorte",
+      "cardNumbers": "Números da cartela",
+      "instructions": "Toque em um espaço para escolher um número.",
+      "free": "LIVRE",
+      "nameRequired": "Informe o nome da cartela.",
+      "saveError": "Não foi possível salvar a cartela. Tente novamente.",
+      "chooseNumber": "Escolha um número",
+      "columnRange": "Coluna {{column}} · {{min}} a {{max}}",
+      "removeNumber": "Remover número",
+      "selectPosition": "Selecionar número da posição {{position}}",
+      "remaining_one": "{{count}} posição restante",
+      "remaining_other": "{{count}} posições restantes",
+      "clear": "Limpar cartela",
+      "cancel": "Cancelar",
+      "save": "Salvar cartela"
     }
   },
   "bingos": {

@@ -30,10 +30,52 @@
     "title": "My bingo cards",
     "description": "Keep all your bingo cards organized in one place",
     "newCard": "New card",
+    "loading": "Loading cards...",
+    "createdAt": "Created on {{date}}",
+    "searchPlaceholder": "Search cards...",
+    "noSearchResults": "No cards found.",
+    "actions": {
+      "edit": "Edit card",
+      "duplicate": "Duplicate card",
+      "delete": "Delete card",
+      "deleteConfirmation": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirmDelete": "Delete",
+      "deleting": "Deleting...",
+      "duplicateError": "Could not duplicate the card.",
+      "deleteError": "Could not delete the card."
+    },
+    "edit": {
+      "title": "Edit card",
+      "description": "Change the card name or numbers.",
+      "save": "Save changes",
+      "notFound": "Card not found."
+    },
     "empty": {
       "title": "No cards added yet",
       "description": "Add your first bingo card to start tracking drawn numbers in your games.",
       "addCard": "Add card"
+    },
+    "new": {
+      "back": "Back to cards",
+      "title": "New card",
+      "description": "Enter the numbers on your bingo card",
+      "name": "Card name",
+      "namePlaceholder": "E.g., Lucky card",
+      "cardNumbers": "Card numbers",
+      "instructions": "Tap a space to choose a number.",
+      "free": "FREE",
+      "nameRequired": "Enter a card name.",
+      "saveError": "Could not save the card. Please try again.",
+      "chooseNumber": "Choose a number",
+      "columnRange": "Column {{column}} · {{min}} to {{max}}",
+      "removeNumber": "Remove number",
+      "selectPosition": "Select number for position {{position}}",
+      "remaining_one": "{{count}} position remaining",
+      "remaining_other": "{{count}} positions remaining",
+      "clear": "Clear card",
+      "cancel": "Cancel",
+      "save": "Save card"
     }
   },
   "bingos": {

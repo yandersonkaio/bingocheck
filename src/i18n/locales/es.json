@@ -30,10 +30,52 @@
     "title": "Mis cartones",
     "description": "Organiza todos tus cartones de bingo en un solo lugar",
     "newCard": "Nuevo cartón",
+    "loading": "Cargando cartones...",
+    "createdAt": "Creado el {{date}}",
+    "searchPlaceholder": "Buscar cartón...",
+    "noSearchResults": "No se encontraron cartones.",
+    "actions": {
+      "edit": "Editar cartón",
+      "duplicate": "Duplicar cartón",
+      "delete": "Eliminar cartón",
+      "deleteConfirmation": "¿Seguro que quieres eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirmDelete": "Eliminar",
+      "deleting": "Eliminando...",
+      "duplicateError": "No se pudo duplicar el cartón.",
+      "deleteError": "No se pudo eliminar el cartón."
+    },
+    "edit": {
+      "title": "Editar cartón",
+      "description": "Modifica el nombre o los números del cartón.",
+      "save": "Guardar cambios",
+      "notFound": "Cartón no encontrado."
+    },
     "empty": {
       "title": "No hay cartones registrados",
       "description": "Registra tu primer cartón para empezar a seguir los números sorteados en tus partidas.",
       "addCard": "Añadir cartón"
+    },
+    "new": {
+      "back": "Volver a cartones",
+      "title": "Nuevo cartón",
+      "description": "Introduce los números de tu cartón de bingo",
+      "name": "Nombre del cartón",
+      "namePlaceholder": "Ej.: Cartón de la suerte",
+      "cardNumbers": "Números del cartón",
+      "instructions": "Toca una casilla para elegir un número.",
+      "free": "LIBRE",
+      "nameRequired": "Introduce el nombre del cartón.",
+      "saveError": "No se pudo guardar el cartón. Inténtalo de nuevo.",
+      "chooseNumber": "Elige un número",
+      "columnRange": "Columna {{column}} · {{min}} a {{max}}",
+      "removeNumber": "Eliminar número",
+      "selectPosition": "Seleccionar número para la posición {{position}}",
+      "remaining_one": "{{count}} casilla restante",
+      "remaining_other": "{{count}} casillas restantes",
+      "clear": "Limpiar cartón",
+      "cancel": "Cancelar",
+      "save": "Guardar cartón"
     }
   },
   "bingos": {

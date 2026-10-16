@@ -4,7 +4,9 @@ import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { Bingos } from './pages/app/bingos'
 import { Cards } from './pages/app/cards'
+import { EditCard } from './pages/app/edit-card'
 import { Home } from './pages/app/home'
+import { NewCard } from './pages/app/new-card'
 import { SignIn } from './pages/auth/sign-in'
 
 export const router = createBrowserRouter([
@@ -14,6 +16,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'cards', element: <Cards /> },
+      { path: 'cards/new', element: <NewCard /> },
+      { path: 'cards/:id/edit', element: <EditCard /> },
       { path: 'bingos', element: <Bingos /> },
     ],
   },
