@@ -26,6 +26,26 @@
     "cards": "Cards",
     "bingos": "Bingo games"
   },
+  "cards": {
+    "title": "My bingo cards",
+    "description": "Keep all your bingo cards organized in one place",
+    "newCard": "New card",
+    "empty": {
+      "title": "No cards added yet",
+      "description": "Add your first bingo card to start tracking drawn numbers in your games.",
+      "addCard": "Add card"
+    }
+  },
+  "bingos": {
+    "title": "My bingo games",
+    "description": "Organize your bingo games and track each round",
+    "newBingo": "New bingo",
+    "empty": {
+      "title": "No bingo games yet",
+      "description": "Create your first bingo game to organize your cards and track drawn numbers in each round.",
+      "createBingo": "Create my first bingo"
+    }
+  },
   "settings": {
     "language": "Language",
     "theme": "Theme",

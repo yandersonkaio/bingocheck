@@ -26,6 +26,26 @@
     "cards": "Cartelle",
     "bingos": "Partite"
   },
+  "cards": {
+    "title": "Le mie cartelle",
+    "description": "Organizza tutte le tue cartelle del bingo in un unico posto",
+    "newCard": "Nuova cartella",
+    "empty": {
+      "title": "Nessuna cartella registrata",
+      "description": "Aggiungi la tua prima cartella per iniziare a seguire i numeri estratti nelle tue partite.",
+      "addCard": "Aggiungi cartella"
+    }
+  },
+  "bingos": {
+    "title": "I miei bingo",
+    "description": "Organizza i tuoi bingo e segui ogni turno",
+    "newBingo": "Nuovo bingo",
+    "empty": {
+      "title": "Nessun bingo registrato",
+      "description": "Crea il tuo primo bingo per organizzare le cartelle e seguire i numeri estratti in ogni turno.",
+      "createBingo": "Crea il mio primo bingo"
+    }
+  },
   "settings": {
     "language": "Lingua",
     "theme": "Tema",

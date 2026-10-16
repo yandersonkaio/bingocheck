@@ -26,6 +26,26 @@
     "cards": "Cartelas",
     "bingos": "Bingos"
   },
+  "cards": {
+    "title": "Minhas cartelas",
+    "description": "Organize suas cartelas em um só lugar",
+    "newCard": "Nova cartela",
+    "empty": {
+      "title": "Nenhuma cartela cadastrada",
+      "description": "Cadastre sua primeira cartela para começar a acompanhar os números sorteados nos seus bingos.",
+      "addCard": "Adicionar cartela"
+    }
+  },
+  "bingos": {
+    "title": "Meus bingos",
+    "description": "Organize seus bingos e acompanhe as rodadas",
+    "newBingo": "Novo bingo",
+    "empty": {
+      "title": "Nenhum bingo cadastrado",
+      "description": "Crie seu primeiro bingo para organizar suas cartelas e acompanhar os números sorteados em cada rodada.",
+      "createBingo": "Criar meu primeiro bingo"
+    }
+  },
   "settings": {
     "language": "Idioma",
     "theme": "Tema",

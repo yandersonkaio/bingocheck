@@ -26,6 +26,26 @@
     "cards": "Cartones",
     "bingos": "Partidas"
   },
+  "cards": {
+    "title": "Mis cartones",
+    "description": "Organiza todos tus cartones de bingo en un solo lugar",
+    "newCard": "Nuevo cartón",
+    "empty": {
+      "title": "No hay cartones registrados",
+      "description": "Registra tu primer cartón para empezar a seguir los números sorteados en tus partidas.",
+      "addCard": "Añadir cartón"
+    }
+  },
+  "bingos": {
+    "title": "Mis bingos",
+    "description": "Organiza tus bingos y sigue cada ronda",
+    "newBingo": "Nuevo bingo",
+    "empty": {
+      "title": "No hay bingos registrados",
+      "description": "Crea tu primer bingo para organizar tus cartones y seguir los números sorteados en cada ronda.",
+      "createBingo": "Crear mi primer bingo"
+    }
+  },
   "settings": {
     "language": "Idioma",
     "theme": "Tema",
