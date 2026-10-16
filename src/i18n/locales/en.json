@@ -1,0 +1,40 @@
+{
+  "app": {
+    "tagline": "Your bingo, under control"
+  },
+  "home": {
+    "title": "Home",
+    "description": "Keep track of your bingo cards and games",
+    "cards": "Cards",
+    "saved": "Saved",
+    "bingos": "Bingo games",
+    "inProgress": "In progress",
+    "empty": {
+      "title": "No bingo games in progress",
+      "description": "Create a bingo game to start tracking drawn numbers and your cards.",
+      "createBingo": "Create bingo game"
+    },
+    "quickAccess": {
+      "title": "Quick access",
+      "myCards": "My cards",
+      "bingoHistory": "Bingo history"
+    }
+  },
+  "navigation": {
+    "ariaLabel": "Main navigation",
+    "home": "Home",
+    "cards": "Cards",
+    "bingos": "Bingo games"
+  },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme",
+    "changeTheme": "Change theme",
+    "appearance": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "mocha": "Mocha",
+    "forest": "Night forest",
+    "pink": "Pink"
+  }
+}

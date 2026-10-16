@@ -1,0 +1,40 @@
+{
+  "app": {
+    "tagline": "Seu bingo sob controle"
+  },
+  "home": {
+    "title": "Início",
+    "description": "Acompanhe suas cartelas e seus bingos",
+    "cards": "Cartelas",
+    "saved": "Salvas",
+    "bingos": "Bingos",
+    "inProgress": "Em andamento",
+    "empty": {
+      "title": "Nenhum bingo em andamento",
+      "description": "Crie um bingo para começar a acompanhar os números sorteados e suas cartelas.",
+      "createBingo": "Criar bingo"
+    },
+    "quickAccess": {
+      "title": "Acesso rápido",
+      "myCards": "Minhas cartelas",
+      "bingoHistory": "Histórico de bingos"
+    }
+  },
+  "navigation": {
+    "ariaLabel": "Navegação principal",
+    "home": "Início",
+    "cards": "Cartelas",
+    "bingos": "Bingos"
+  },
+  "settings": {
+    "language": "Idioma",
+    "theme": "Tema",
+    "changeTheme": "Alterar tema",
+    "appearance": "Aparência",
+    "light": "Claro",
+    "dark": "Escuro",
+    "mocha": "Mocha",
+    "forest": "Verde noturno",
+    "pink": "Rosa"
+  }
+}
