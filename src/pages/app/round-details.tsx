@@ -495,23 +495,30 @@ export function RoundDetails() {
             })}
           </div>
         ) : (
-          <ol className="grid grid-cols-4 gap-2 sm:grid-cols-5 md:grid-cols-6">
+          <ol className="grid grid-cols-5 gap-1.5 sm:grid-cols-8 md:grid-cols-10">
             {drawnNumbers.map((number, index) => {
               const isLast = index === drawnNumbers.length - 1
 
               return (
                 <li
                   key={`${index}-${number}`}
-                  className={`flex min-w-0 flex-col items-center gap-1 rounded-lg border px-1 py-2 text-center ${
+                  className={`flex aspect-square flex-col items-center justify-center gap-0.5 rounded-sm ${
                     isLast
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'bg-card border-border'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-foreground'
                   }`}
                 >
-                  <span className="text-muted-foreground text-[10px] tabular-nums">
+                  <span
+                    className={`text-[9px] font-medium tabular-nums ${
+                      isLast
+                        ? 'text-primary-foreground/70'
+                        : 'text-muted-foreground'
+                    }`}
+                  >
                     {index + 1}º
                   </span>
-                  <span className="text-sm font-semibold tabular-nums sm:text-base">
+
+                  <span className="text-xs font-semibold tabular-nums sm:text-sm">
                     {getLetter(number)}-{number}
                   </span>
                 </li>
