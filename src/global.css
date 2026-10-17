@@ -264,4 +264,10 @@
     @apply bg-background text-foreground;
     min-height: 100vh;
   }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a {
+    cursor: pointer;
+  }
 }
