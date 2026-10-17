@@ -159,6 +159,7 @@
       "noAvailableCards": "Você ainda não cadastrou nenhuma cartela.",
       "createCard": "Cadastrar cartela",
       "saveCards": "Salvar alterações",
+      "cardsRequiredToStart": "Vincule pelo menos uma cartela a este bingo antes de iniciar uma rodada.",
       "manageCardsError": "Não foi possível atualizar as cartelas. Tente novamente."
     },
     "rounds": {

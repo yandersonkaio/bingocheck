@@ -159,6 +159,7 @@
       "noAvailableCards": "You haven't created any cards yet.",
       "createCard": "Create card",
       "saveCards": "Save changes",
+      "cardsRequiredToStart": "Link at least one card to this bingo before starting a round.",
       "manageCardsError": "Could not update the cards. Please try again."
     },
     "rounds": {

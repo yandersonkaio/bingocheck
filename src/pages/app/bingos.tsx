@@ -13,7 +13,12 @@ export function Bingos() {
     [],
   )
 
-  const isLoading = bingos === undefined
+  const existingCardIds = useLiveQuery(async () => {
+    const cards = await db.cards.toArray()
+    return new Set(cards.map((card) => card.id))
+  }, [])
+
+  const isLoading = bingos === undefined || existingCardIds === undefined
 
   function formatDate(date: string | null) {
     if (!date) {
@@ -83,41 +88,43 @@ export function Bingos() {
 
       {!isLoading && bingos.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2">
-          {bingos.map((bingo) => (
-            <Link
-              key={bingo.id}
-              to={`/bingos/${bingo.id}`}
-              className="bg-card border-border hover:border-primary/50 flex flex-col gap-4 rounded-xl border p-4 transition-colors"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <h2 className="min-w-0 truncate text-base font-semibold">
-                  {bingo.name}
-                </h2>
+          {bingos.map((bingo) => {
+            const validCardCount = bingo.cardIds.filter((cardId) =>
+              existingCardIds.has(cardId),
+            ).length
 
-                <span className="bg-muted text-muted-foreground shrink-0 rounded-full px-2.5 py-1 text-xs font-medium">
-                  {t(`bingos.status.${bingo.status}`)}
-                </span>
-              </div>
+            return (
+              <Link
+                key={bingo.id}
+                to={`/bingos/${bingo.id}`}
+                className="bg-card border-border hover:border-primary/50 flex flex-col gap-4 rounded-xl border p-4 transition-colors"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="min-w-0 truncate text-base font-semibold">
+                    {bingo.name}
+                  </h2>
 
-              <div className="flex flex-col gap-3">
-                <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                  <CalendarDays className="size-4 shrink-0" />
-
-                  <span>{formatDate(bingo.date)}</span>
-                </div>
-
-                <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                  <Grid3X3 className="size-4 shrink-0" />
-
-                  <span>
-                    {t('bingos.cardCount', {
-                      count: bingo.cardIds.length,
-                    })}
+                  <span className="bg-muted text-muted-foreground shrink-0 rounded-full px-2.5 py-1 text-xs font-medium">
+                    {t(`bingos.status.${bingo.status}`)}
                   </span>
                 </div>
-              </div>
-            </Link>
-          ))}
+
+                <div className="flex flex-col gap-3">
+                  <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <CalendarDays className="size-4 shrink-0" />
+                    <span>{formatDate(bingo.date)}</span>
+                  </div>
+
+                  <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <Grid3X3 className="size-4 shrink-0" />
+                    <span>
+                      {t('bingos.cardCount', { count: validCardCount })}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
         </div>
       )}
     </div>

@@ -85,7 +85,13 @@ export function BingoDetails() {
     )
       return
 
-    setSelectedCardIds(bingo.cardIds)
+    if (allCards === undefined) return
+
+    const existingCardIds = new Set(allCards.map((card) => card.id))
+
+    setSelectedCardIds(
+      bingo.cardIds.filter((cardId) => existingCardIds.has(cardId)),
+    )
     setCardError(null)
     setIsCardModalOpen(true)
   }
@@ -105,16 +111,17 @@ export function BingoDetails() {
     setCardError(null)
 
     try {
-      await updateBingoCards(id, selectedCardIds)
+      const existingCards = await db.cards.toArray()
+      const existingCardIds = new Set(existingCards.map((card) => card.id))
+      const validSelectedIds = selectedCardIds.filter((cardId) =>
+        existingCardIds.has(cardId),
+      )
+
+      await updateBingoCards(id, validSelectedIds)
       setIsCardModalOpen(false)
     } catch (error) {
       console.error('Failed to update bingo cards:', error)
-      setCardError(
-        t('bingos.details.manageCardsError', {
-          defaultValue:
-            'Não foi possível atualizar as cartelas. Tente novamente.',
-        }),
-      )
+      setCardError(t('bingos.details.manageCardsError'))
     } finally {
       setIsSavingCards(false)
     }
@@ -257,7 +264,7 @@ export function BingoDetails() {
 
               <span>
                 {t('bingos.cardCount', {
-                  count: bingo.cardIds.length,
+                  count: linkedCards.length,
                 })}
               </span>
             </div>
@@ -520,7 +527,7 @@ export function BingoDetails() {
 
             <p className="text-muted-foreground mt-1 text-sm">
               {t('bingos.cardCount', {
-                count: bingo.cardIds.length,
+                count: linkedCards.length,
               })}
             </p>
           </div>

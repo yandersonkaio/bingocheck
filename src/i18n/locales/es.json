@@ -159,6 +159,7 @@
       "noAvailableCards": "Todavía no has creado ningún cartón.",
       "createCard": "Crear cartón",
       "saveCards": "Guardar cambios",
+      "cardsRequiredToStart": "Vincula al menos un cartón a este bingo antes de iniciar una ronda.",
       "manageCardsError": "No se pudieron actualizar los cartones. Inténtalo de nuevo."
     },
     "rounds": {

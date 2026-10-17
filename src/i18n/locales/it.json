@@ -159,6 +159,7 @@
       "noAvailableCards": "Non hai ancora creato nessuna cartella.",
       "createCard": "Crea cartella",
       "saveCards": "Salva modifiche",
+      "cardsRequiredToStart": "Associa almeno una cartella a questo bingo prima di iniziare un turno.",
       "manageCardsError": "Impossibile aggiornare le cartelle. Riprova."
     },
     "rounds": {
