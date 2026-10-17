@@ -9,10 +9,13 @@ export function Header() {
   const { t } = useTranslation()
 
   return (
-    <header className="border-border border-b">
+    <header className="border-border bg-background/80 sticky top-0 z-40 border-b backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
-        <Link to="/" className="flex min-w-0 items-center gap-3">
-          <div className="bg-primary/10 flex size-10 shrink-0 items-center justify-center rounded-xl">
+        <Link
+          to="/"
+          className="group flex min-w-0 items-center gap-3 transition-opacity"
+        >
+          <div className="bg-primary/10 ring-primary/10 group-hover:bg-primary/15 flex size-10 shrink-0 items-center justify-center rounded-xl ring-1 transition-colors">
             <CheckCheck className="text-primary size-6" />
           </div>
 
@@ -21,7 +24,7 @@ export function Header() {
               BingoCheck
             </span>
 
-            <span className="text-muted-foreground text-xs">
+            <span className="text-muted-foreground truncate text-xs">
               {t('app.tagline')}
             </span>
           </div>

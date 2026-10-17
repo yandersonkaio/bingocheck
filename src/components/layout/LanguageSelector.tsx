@@ -95,7 +95,11 @@ export function LanguageSelector() {
         aria-haspopup="menu"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((previous) => !previous)}
-        className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors"
+        className={`border-border bg-card text-card-foreground flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-colors ${
+          isOpen
+            ? 'border-primary/50 bg-accent'
+            : 'hover:bg-accent hover:text-accent-foreground'
+        }`}
       >
         <Languages className="h-4 w-4" />
 
@@ -110,7 +114,7 @@ export function LanguageSelector() {
         <span className="hidden sm:inline">{currentLanguage.short}</span>
 
         <ChevronDown
-          className={`hidden h-3.5 w-3.5 transition-transform sm:block ${
+          className={`hidden h-3.5 w-3.5 transition-transform duration-200 sm:block ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
@@ -120,46 +124,55 @@ export function LanguageSelector() {
         <div
           role="menu"
           aria-label={t('settings.availableLanguages')}
-          className="border-border bg-popover text-popover-foreground absolute top-full right-0 z-50 mt-2 w-56 rounded-lg border p-1.5 shadow-lg"
+          className="border-border bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-full right-0 z-50 mt-2 w-56 origin-top-right overflow-hidden rounded-xl border shadow-lg motion-reduce:animate-none"
         >
-          {languages.map((language) => {
-            const selected = currentLanguage.code === language.code
+          <div className="border-border text-muted-foreground flex items-center gap-1.5 border-b px-3 py-2 text-[10px] font-semibold tracking-wider uppercase">
+            <span className="bg-primary size-1.5 rounded-full" />
+            {t('settings.currentLanguage', {
+              defaultValue: 'Idioma atual',
+            })}
+          </div>
 
-            return (
-              <button
-                key={language.code}
-                type="button"
-                role="menuitemradio"
-                aria-checked={selected}
-                onClick={() => {
-                  handleLanguageChange(language.code).catch((error) => {
-                    console.error('Erro ao alterar idioma:', error)
-                  })
-                }}
-                className={`flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-colors ${
-                  selected
-                    ? 'bg-accent text-accent-foreground'
-                    : 'hover:bg-accent hover:text-accent-foreground'
-                }`}
-              >
-                <span className="flex items-center gap-3">
-                  <span
-                    className="text-lg leading-none"
-                    role="img"
-                    aria-label={language.label}
-                  >
-                    {language.flag}
+          <div className="p-1.5">
+            {languages.map((language) => {
+              const selected = currentLanguage.code === language.code
+
+              return (
+                <button
+                  key={language.code}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={selected}
+                  onClick={() => {
+                    handleLanguageChange(language.code).catch((error) => {
+                      console.error('Erro ao alterar idioma:', error)
+                    })
+                  }}
+                  className={`flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-colors ${
+                    selected
+                      ? 'bg-primary/10 text-foreground font-medium'
+                      : 'hover:bg-accent hover:text-accent-foreground'
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <span
+                      className="text-lg leading-none"
+                      role="img"
+                      aria-label={language.label}
+                    >
+                      {language.flag}
+                    </span>
+
+                    <span>{language.label}</span>
                   </span>
 
-                  <span>{language.label}</span>
-                </span>
-
-                {selected && (
-                  <Check className="text-primary h-4 w-4 shrink-0" />
-                )}
-              </button>
-            )
-          })}
+                  {selected && (
+                    <Check className="text-primary h-4 w-4 shrink-0" />
+                  )}
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
     </div>

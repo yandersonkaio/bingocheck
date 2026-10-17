@@ -59,7 +59,12 @@ export function ThemeSelector() {
         aria-label={t('settings.changeTheme')}
         aria-expanded={open}
         aria-controls="theme-options"
-        className="text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-ring flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+        aria-haspopup="menu"
+        className={`text-foreground focus-visible:outline-ring flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          open
+            ? 'bg-accent text-accent-foreground'
+            : 'hover:bg-accent hover:text-accent-foreground'
+        }`}
       >
         <Palette className="h-5 w-5" />
       </button>
@@ -67,35 +72,50 @@ export function ThemeSelector() {
       {open && (
         <div
           id="theme-options"
-          className="border-border bg-popover text-popover-foreground absolute right-0 z-50 mt-2 w-52 rounded-xl border p-1.5 shadow-lg"
+          role="menu"
+          aria-label={t('settings.appearance')}
+          className="border-border bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute right-0 z-50 mt-2 w-52 origin-top-right overflow-hidden rounded-xl border shadow-lg motion-reduce:animate-none"
         >
-          <p className="text-muted-foreground px-3 py-2 text-xs font-semibold">
+          {/* Header — mesmo padrão do LanguageSelector */}
+          <div className="border-border text-muted-foreground flex items-center gap-1.5 border-b px-3 py-2 text-[10px] font-semibold tracking-wider uppercase">
+            <span className="bg-primary size-1.5 rounded-full" />
             {t('settings.appearance')}
-          </p>
+          </div>
 
-          {themes.map((item) => {
-            const Icon = item.icon
-            const selected = theme === item.id
+          <div className="p-1.5" role="none">
+            {themes.map((item) => {
+              const Icon = item.icon
+              const selected = theme === item.id
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => selectTheme(item.id)}
-                className={`hover:bg-accent hover:text-accent-foreground flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
-                  selected ? 'bg-accent/60' : ''
-                }`}
-              >
-                <span className="flex items-center gap-3">
-                  <Icon className="h-4 w-4" />
-                  {t(item.translationKey)}
-                </span>
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={selected}
+                  onClick={() => selectTheme(item.id)}
+                  className={`flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-colors ${
+                    selected
+                      ? 'bg-primary/10 text-foreground font-medium'
+                      : 'hover:bg-accent hover:text-accent-foreground'
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <Icon
+                      className={`h-4 w-4 ${
+                        selected ? 'text-primary' : 'text-muted-foreground'
+                      }`}
+                    />
+                    {t(item.translationKey)}
+                  </span>
 
-                {selected && <Check className="h-4 w-4" />}
-              </button>
-            )
-          })}
+                  {selected && (
+                    <Check className="text-primary h-4 w-4 shrink-0" />
+                  )}
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
     </div>

@@ -241,11 +241,11 @@ export function BingoDetails() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-7">
       <div className="flex items-center gap-3">
         <Link
           to="/bingos"
-          className="text-muted-foreground hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
           aria-label={t('bingos.details.back')}
         >
           <ArrowLeft className="size-5" />
@@ -278,8 +278,13 @@ export function BingoDetails() {
         </button>
       </div>
 
-      <section className="bg-card border-border flex flex-col gap-4 rounded-xl border p-5">
-        <div className="flex items-start justify-between gap-3">
+      <section className="bg-card border-border relative flex flex-col gap-4 overflow-hidden rounded-xl border p-5">
+        <div
+          aria-hidden
+          className="bg-primary/15 pointer-events-none absolute -top-12 -right-12 size-32 rounded-full blur-3xl"
+        />
+
+        <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold tracking-tight break-words">
               {bingo.name}
@@ -302,7 +307,7 @@ export function BingoDetails() {
           </div>
 
           <span
-            className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium ${
+            className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
               isBingoFinished
                 ? 'bg-muted text-muted-foreground'
                 : bingo.status === 'in_progress'
@@ -310,6 +315,16 @@ export function BingoDetails() {
                   : 'bg-muted text-muted-foreground'
             }`}
           >
+            <span
+              className={`size-1.5 rounded-full ${
+                isBingoFinished
+                  ? 'bg-muted-foreground/60'
+                  : bingo.status === 'in_progress'
+                    ? 'bg-primary'
+                    : 'bg-muted-foreground/60'
+              }`}
+            />
+
             {t(`bingos.status.${bingo.status}`)}
           </span>
         </div>
@@ -340,7 +355,7 @@ export function BingoDetails() {
             canStartRound && (
               <Link
                 to={`/bingos/${bingo.id}/rounds/new`}
-                className="bg-primary text-primary-foreground inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+                className="bg-primary text-primary-foreground inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
               >
                 <Plus className="size-4" />
 
@@ -364,12 +379,17 @@ export function BingoDetails() {
           )}
 
         {rounds.length === 0 && (
-          <div className="bg-card border-border flex flex-col items-center gap-4 rounded-xl border px-5 py-8 text-center sm:py-10">
-            <div className="bg-primary/10 flex size-16 items-center justify-center rounded-full">
-              <CirclePlay className="text-primary size-8" />
+          <div className="bg-card border-border relative flex flex-col items-center gap-5 overflow-hidden rounded-xl border px-5 py-10 text-center">
+            <div
+              aria-hidden
+              className="bg-primary/20 pointer-events-none absolute -top-16 left-1/2 size-40 -translate-x-1/2 rounded-full blur-3xl"
+            />
+
+            <div className="bg-primary/10 ring-primary/20 relative flex size-16 items-center justify-center rounded-full ring-4">
+              <CirclePlay className="text-primary size-7" />
             </div>
 
-            <div className="flex flex-col items-center gap-2">
+            <div className="relative flex flex-col items-center gap-2">
               <h3 className="text-base font-semibold">
                 {t('bingos.details.noRoundsTitle', {
                   defaultValue: 'Nenhuma rodada iniciada',
@@ -387,7 +407,7 @@ export function BingoDetails() {
             {!isBingoFinished && canStartRound && (
               <Link
                 to={`/bingos/${bingo.id}/rounds/new`}
-                className="bg-primary text-primary-foreground flex w-full max-w-sm items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-opacity hover:opacity-90"
+                className="bg-primary text-primary-foreground relative flex w-full max-w-sm items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
               >
                 <Plus className="size-4" />
 
@@ -402,10 +422,10 @@ export function BingoDetails() {
         {activeRound && (
           <Link
             to={`/bingos/${bingo.id}/rounds/${activeRound.id}`}
-            className="bg-primary/5 border-primary/40 hover:border-primary flex items-center gap-3 rounded-xl border p-4 transition-colors"
+            className="border-primary/40 from-primary/10 via-primary/5 hover:border-primary group relative flex items-center gap-3 overflow-hidden rounded-xl border bg-gradient-to-r to-transparent p-4 transition-colors"
           >
-            <div className="bg-primary/10 flex size-11 shrink-0 items-center justify-center rounded-lg">
-              <CirclePlay className="text-primary size-5" />
+            <div className="bg-primary/15 flex size-12 shrink-0 items-center justify-center rounded-xl">
+              <CirclePlay className="text-primary size-6" />
             </div>
 
             <div className="min-w-0 flex-1">
@@ -416,14 +436,15 @@ export function BingoDetails() {
               </h3>
 
               <p className="text-primary mt-1 flex items-center gap-1.5 text-xs font-medium">
-                <Clock3 className="size-3.5" />
-
+                <span className="bg-primary size-1.5 animate-pulse rounded-full" />
                 {t('bingos.rounds.details.inProgress', {
                   defaultValue: 'Em andamento',
                 })}
               </p>
 
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
+                <Clock3 className="size-3.5" />
+
                 {t('bingos.rounds.details.drawnCount', {
                   count: activeRound.drawnNumbers.length,
                   defaultValue: '{{count}} de 75 números registrados',
@@ -431,13 +452,13 @@ export function BingoDetails() {
               </p>
             </div>
 
-            <ChevronRight className="text-primary size-5 shrink-0" />
+            <ChevronRight className="text-primary size-5 shrink-0 transition-transform group-hover:translate-x-0.5" />
           </Link>
         )}
 
         {finishedRounds.length > 0 && (
           <div className="flex flex-col gap-3">
-            <h3 className="text-muted-foreground text-sm font-medium">
+            <h3 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
               {t('bingos.details.roundHistory', {
                 defaultValue: 'Histórico de rodadas',
               })}
@@ -452,12 +473,12 @@ export function BingoDetails() {
                 <Link
                   key={round.id}
                   to={`/bingos/${bingo.id}/rounds/${round.id}`}
-                  className="bg-card border-border hover:border-primary/50 flex items-center gap-3 rounded-xl border p-4 transition-colors"
+                  className="group bg-card border-border hover:border-primary/50 flex items-center gap-3 rounded-xl border p-4 transition-all hover:shadow-sm"
                 >
                   <div
                     className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${
                       hasBingo
-                        ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                        ? 'bg-bingo-win/10 text-bingo-win'
                         : 'bg-muted text-muted-foreground'
                     }`}
                   >
@@ -479,7 +500,7 @@ export function BingoDetails() {
                       <span
                         className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
                           hasBingo
-                            ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                            ? 'bg-bingo-win/10 text-bingo-win'
                             : 'bg-muted text-muted-foreground'
                         }`}
                       >
@@ -513,7 +534,7 @@ export function BingoDetails() {
                         {winners?.map((winner) => (
                           <p
                             key={winner.cardId}
-                            className="text-xs text-green-600 dark:text-green-400"
+                            className="text-bingo-win text-xs"
                           >
                             <span className="font-medium">
                               {winner.cardName}
@@ -541,7 +562,7 @@ export function BingoDetails() {
                     </div>
                   </div>
 
-                  <ChevronRight className="text-muted-foreground size-4 shrink-0" />
+                  <ChevronRight className="text-muted-foreground group-hover:text-primary size-4 shrink-0 transition-colors" />
                 </Link>
               )
             })}
@@ -584,12 +605,17 @@ export function BingoDetails() {
         )}
 
         {cards !== undefined && linkedCards.length === 0 && (
-          <div className="bg-card border-border flex flex-col items-center gap-3 rounded-xl border border-dashed px-5 py-10 text-center">
-            <div className="bg-primary/10 flex size-12 items-center justify-center rounded-full">
+          <div className="bg-card border-border relative flex flex-col items-center gap-4 overflow-hidden rounded-xl border border-dashed px-5 py-10 text-center">
+            <div
+              aria-hidden
+              className="bg-primary/15 pointer-events-none absolute -top-12 left-1/2 size-32 -translate-x-1/2 rounded-full blur-3xl"
+            />
+
+            <div className="bg-primary/10 ring-primary/20 relative flex size-14 items-center justify-center rounded-full ring-4">
               <Ticket className="text-primary size-6" />
             </div>
 
-            <p className="text-muted-foreground max-w-sm text-sm">
+            <p className="text-muted-foreground relative max-w-sm text-sm">
               {t('bingos.details.noCards')}
             </p>
           </div>
@@ -602,7 +628,7 @@ export function BingoDetails() {
                 key={card.id}
                 to={`/cards/${card.id}/edit`}
                 state={{ returnTo: `/bingos/${bingo.id}` }}
-                className="bg-card border-border hover:border-primary/50 flex items-center gap-3 rounded-xl border p-4 transition-colors"
+                className="group bg-card border-border hover:border-primary/50 flex items-center gap-3 rounded-xl border p-4 transition-all hover:shadow-sm"
               >
                 <div className="bg-primary/10 flex size-10 shrink-0 items-center justify-center rounded-lg">
                   <Grid3X3 className="text-primary size-5" />
@@ -612,7 +638,7 @@ export function BingoDetails() {
                   {card.name}
                 </span>
 
-                <ChevronRight className="text-muted-foreground size-4 shrink-0" />
+                <ChevronRight className="text-muted-foreground group-hover:text-primary size-4 shrink-0 transition-colors" />
               </Link>
             ))}
           </div>
@@ -659,7 +685,7 @@ export function BingoDetails() {
                     onClick={() => setIsCardModalOpen(false)}
                     disabled={isSavingCards}
                     aria-label={t('bingos.rounds.new.cancel')}
-                    className="text-muted-foreground hover:text-foreground hidden cursor-pointer rounded-lg p-1 disabled:opacity-50 sm:inline-flex"
+                    className="text-muted-foreground hover:bg-accent hover:text-foreground hidden cursor-pointer rounded-lg p-1 disabled:opacity-50 sm:inline-flex"
                   >
                     <X className="size-5" />
                   </button>
@@ -746,7 +772,7 @@ export function BingoDetails() {
                     type="button"
                     onClick={handleSaveCards}
                     disabled={isSavingCards || allCards === undefined}
-                    className="bg-primary text-primary-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium disabled:opacity-50"
+                    className="bg-primary text-primary-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium shadow-sm disabled:opacity-50"
                   >
                     {isSavingCards
                       ? t('bingos.details.savingStatus', {
@@ -818,7 +844,7 @@ export function BingoDetails() {
                   type="button"
                   onClick={handleDeleteBingo}
                   disabled={isDeleting}
-                  className="bg-destructive text-destructive-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium disabled:opacity-50"
+                  className="bg-destructive text-destructive-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium shadow-sm disabled:opacity-50"
                 >
                   {isDeleting
                     ? t('bingos.delete.deleting')
@@ -872,7 +898,7 @@ export function BingoDetails() {
                   type="button"
                   onClick={handleConfirmAction}
                   disabled={isSaving}
-                  className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium disabled:opacity-50"
+                  className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium shadow-sm disabled:opacity-50"
                 >
                   {confirmation === 'finish' ? (
                     <Flag className="size-4" />

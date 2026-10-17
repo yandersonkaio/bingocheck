@@ -73,6 +73,23 @@ export function NumberPicker({
     max,
   })
 
+  const columnStrip = (
+    <div className="flex gap-1" aria-hidden>
+      {columns.map((letter, idx) => (
+        <div
+          key={letter}
+          className={`flex h-6 flex-1 items-center justify-center rounded text-[10px] font-bold tracking-wider transition-all ${
+            idx === columnIndex
+              ? 'bg-primary text-primary-foreground shadow-sm'
+              : 'bg-muted/50 text-muted-foreground/60'
+          }`}
+        >
+          {letter}
+        </div>
+      ))}
+    </div>
+  )
+
   const content = (
     <NumberOptions
       columnIndex={columnIndex}
@@ -92,6 +109,7 @@ export function NumberPicker({
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
 
+          {columnStrip}
           {content}
         </DialogContent>
       </Dialog>
@@ -101,13 +119,16 @@ export function NumberPicker({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm px-4 pb-8">
+        <div className="mx-auto w-full max-w-sm px-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
           <DrawerHeader className="px-0 text-left">
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
 
-          {content}
+          <div className="flex flex-col gap-4">
+            {columnStrip}
+            {content}
+          </div>
         </div>
       </DrawerContent>
     </Drawer>

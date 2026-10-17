@@ -2,6 +2,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import {
   ArrowLeft,
   Check,
+  ChevronRight,
+  CirclePlay,
   Columns3,
   Grid3X3,
   Play,
@@ -50,6 +52,8 @@ export function NewRound() {
 
   const activeRound = rounds?.find((round) => round.status === 'in_progress')
 
+  const hasRules = selectedRules.length > 0
+
   function toggleRule(rule: RoundRule) {
     if (isSaving || activeRound) return
 
@@ -90,31 +94,70 @@ export function NewRound() {
 
   if (bingo === undefined || rounds === undefined) {
     return (
-      <div className="text-muted-foreground py-10 text-center text-sm">
-        {t('bingos.loading')}
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+        <div className="bg-card border-border relative h-20 overflow-hidden rounded-xl border">
+          <div
+            aria-hidden
+            className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-24 rounded-full blur-2xl"
+          />
+
+          <div className="relative flex h-full flex-col justify-center gap-2 px-4">
+            <div className="bg-muted h-4 w-40 animate-pulse rounded" />
+            <div className="bg-muted h-3 w-56 animate-pulse rounded" />
+          </div>
+        </div>
+
+        <div className="text-muted-foreground py-10 text-center text-sm">
+          {t('bingos.loading')}
+        </div>
       </div>
     )
   }
 
   if (bingo === null) {
     return (
-      <div className="mx-auto flex max-w-xl flex-col items-center gap-4 py-10 text-center">
-        <p>{t('bingos.details.notFound')}</p>
-
-        <Link to="/bingos" className="text-primary text-sm font-medium">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-7">
+        <Link
+          to="/bingos"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground inline-flex w-fit items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors"
+        >
+          <ArrowLeft className="size-4" />
           {t('bingos.details.back')}
         </Link>
+
+        <section className="bg-card border-border relative flex flex-col items-center gap-5 overflow-hidden rounded-xl border px-5 py-12 text-center">
+          <div
+            aria-hidden
+            className="bg-primary/20 pointer-events-none absolute -top-16 left-1/2 size-40 -translate-x-1/2 rounded-full blur-3xl"
+          />
+
+          <div className="bg-primary/10 ring-primary/20 relative flex size-16 items-center justify-center rounded-full ring-4">
+            <Grid3X3 className="text-primary size-7" />
+          </div>
+
+          <h1 className="relative text-lg font-semibold">
+            {t('bingos.details.notFound')}
+          </h1>
+
+          <Link
+            to="/bingos"
+            className="bg-primary text-primary-foreground relative inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
+          >
+            <ArrowLeft className="size-4" />
+            {t('bingos.details.back')}
+          </Link>
+        </section>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-xl flex-col gap-7">
       {/* Navegação */}
       <div className="flex items-center gap-3">
         <Link
           to={`/bingos/${bingo.id}`}
-          className="text-muted-foreground hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
           aria-label={t('bingos.details.back')}
         >
           <ArrowLeft className="size-5" />
@@ -136,22 +179,32 @@ export function NewRound() {
 
       {/* Aviso de rodada em andamento */}
       {activeRound && (
-        <div className="border-border bg-muted/50 flex flex-col gap-3 rounded-xl border p-4">
-          <p className="text-sm font-medium">
-            {t('bingos.rounds.new.activeRoundWarning', {
-              defaultValue: 'Já existe uma rodada em andamento neste bingo.',
-            })}
-          </p>
+        <Link
+          to={`/bingos/${bingo.id}/rounds/${activeRound.id}`}
+          className="border-primary/40 from-primary/10 via-primary/5 hover:border-primary group relative flex items-center gap-3 overflow-hidden rounded-xl border bg-gradient-to-r to-transparent p-4 transition-colors"
+        >
+          <div className="bg-primary/15 flex size-11 shrink-0 items-center justify-center rounded-lg">
+            <CirclePlay className="text-primary size-5" />
+          </div>
 
-          <Link
-            to={`/bingos/${bingo.id}/rounds/${activeRound.id}`}
-            className="text-primary text-sm font-medium hover:underline"
-          >
-            {t('bingos.rounds.new.viewActiveRound', {
-              defaultValue: 'Continuar rodada em andamento',
-            })}
-          </Link>
-        </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">
+              {t('bingos.rounds.new.activeRoundWarning', {
+                defaultValue: 'Já existe uma rodada em andamento neste bingo.',
+              })}
+            </p>
+
+            <p className="text-primary mt-1 flex items-center gap-1.5 text-xs font-medium">
+              <span className="bg-primary size-1.5 animate-pulse rounded-full" />
+
+              {t('bingos.rounds.new.viewActiveRound', {
+                defaultValue: 'Continuar rodada em andamento',
+              })}
+            </p>
+          </div>
+
+          <ChevronRight className="text-primary size-5 shrink-0 transition-transform group-hover:translate-x-0.5" />
+        </Link>
       )}
 
       {/* Regras de vitória */}
@@ -177,25 +230,32 @@ export function NewRound() {
                 onClick={() => toggleRule(rule)}
                 disabled={isSaving || !!activeRound}
                 aria-pressed={isSelected}
-                className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-xl border p-4 text-left transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
                   isSelected
-                    ? 'border-primary bg-primary/5'
-                    : 'bg-card border-border hover:border-primary/50'
+                    ? 'border-primary bg-primary/5 shadow-sm'
+                    : 'bg-card border-border hover:border-primary/50 hover:shadow-sm'
                 }`}
               >
+                {isSelected && (
+                  <div
+                    aria-hidden
+                    className="bg-primary/10 pointer-events-none absolute -top-8 -right-8 size-20 rounded-full blur-2xl"
+                  />
+                )}
+
                 {/* Ícone */}
                 <div
-                  className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${
+                  className={`relative flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors ${
                     isSelected
                       ? 'bg-primary/10 text-primary'
-                      : 'bg-muted text-muted-foreground'
+                      : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
                   }`}
                 >
                   <Icon className="size-5" />
                 </div>
 
                 {/* Título e descrição */}
-                <div className="min-w-0 flex-1">
+                <div className="relative min-w-0 flex-1">
                   <p className="text-sm font-semibold">
                     {t(`bingos.rounds.rules.${rule}.title`)}
                   </p>
@@ -207,10 +267,10 @@ export function NewRound() {
 
                 {/* Indicador de seleção */}
                 <div
-                  className={`flex size-5 shrink-0 items-center justify-center rounded border ${
+                  className={`relative flex size-5 shrink-0 items-center justify-center rounded border transition-colors ${
                     isSelected
                       ? 'bg-primary border-primary text-primary-foreground'
-                      : 'border-input'
+                      : 'border-input bg-background'
                   }`}
                 >
                   {isSelected && <Check className="size-3.5" />}
@@ -222,23 +282,44 @@ export function NewRound() {
       </section>
 
       {/* Resumo da rodada */}
-      <section className="bg-muted/50 border-border flex flex-col gap-2 rounded-xl border p-4">
-        <h2 className="text-sm font-semibold">
-          {t('bingos.rounds.new.summary')}
-        </h2>
+      <section className="bg-card border-border relative flex flex-col gap-3 overflow-hidden rounded-xl border p-4">
+        <div
+          aria-hidden
+          className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-24 rounded-full blur-3xl"
+        />
 
-        <p className="text-muted-foreground text-sm">
+        <div className="relative flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold">
+            {t('bingos.rounds.new.summary')}
+          </h2>
+
+          <span
+            className={`flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors ${
+              hasRules
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-primary/10 text-primary'
+            }`}
+          >
+            <span
+              className={`size-1.5 rounded-full ${
+                hasRules ? 'bg-primary-foreground' : 'bg-primary animate-pulse'
+              }`}
+            />
+
+            {t('bingos.rounds.new.selectedCount', {
+              count: selectedRules.length,
+            })}
+          </span>
+        </div>
+
+        <p className="text-muted-foreground relative text-xs">
           {t('bingos.rounds.roundNumber', {
             number: roundNumber,
-          })}{' '}
-          ·{' '}
-          {t('bingos.rounds.new.selectedCount', {
-            count: selectedRules.length,
           })}
         </p>
 
-        {selectedRules.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
+        {hasRules ? (
+          <div className="relative flex flex-wrap gap-2">
             {selectedRules.map((rule) => (
               <span
                 key={rule}
@@ -249,7 +330,7 @@ export function NewRound() {
             ))}
           </div>
         ) : (
-          <p className="text-muted-foreground text-xs">
+          <p className="text-muted-foreground relative text-xs">
             {t('bingos.rounds.new.noRules')}
           </p>
         )}
@@ -266,7 +347,7 @@ export function NewRound() {
         <div className="flex gap-3">
           <Link
             to={`/bingos/${bingo.id}`}
-            className="border-border hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium transition-colors"
+            className="border-border bg-card hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium transition-colors"
           >
             {t('bingos.rounds.new.cancel')}
           </Link>
@@ -274,8 +355,8 @@ export function NewRound() {
           <button
             type="button"
             onClick={handleStartRound}
-            disabled={isSaving || selectedRules.length === 0 || !!activeRound}
-            className="bg-primary text-primary-foreground inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isSaving || !hasRules || !!activeRound}
+            className="bg-primary text-primary-foreground inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Play className="size-4" />
 

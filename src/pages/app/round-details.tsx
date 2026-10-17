@@ -272,34 +272,71 @@ export function RoundDetails() {
 
   if (bingo === undefined || round === undefined || cards === undefined) {
     return (
-      <div className="text-muted-foreground py-10 text-center text-sm">
-        {t('bingos.loading')}
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+        <div className="bg-card border-border relative h-20 overflow-hidden rounded-xl border">
+          <div
+            aria-hidden
+            className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-24 rounded-full blur-2xl"
+          />
+
+          <div className="relative flex h-full flex-col justify-center gap-2 px-4">
+            <div className="bg-muted h-4 w-40 animate-pulse rounded" />
+            <div className="bg-muted h-3 w-56 animate-pulse rounded" />
+          </div>
+        </div>
+
+        <div className="text-muted-foreground py-10 text-center text-sm">
+          {t('bingos.loading')}
+        </div>
       </div>
     )
   }
 
   if (!bingo || !round || round.bingoId !== bingo.id) {
     return (
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 py-10 text-center">
-        <h1 className="text-xl font-semibold">
-          {t('bingos.rounds.details.notFound', {
-            defaultValue: 'Rodada não encontrada',
-          })}
-        </h1>
-
-        <Link to="/bingos" className="text-primary text-sm font-medium">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-7">
+        <Link
+          to="/bingos"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground inline-flex w-fit items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors"
+        >
+          <ArrowLeft className="size-4" />
           {t('bingos.details.back')}
         </Link>
+
+        <section className="bg-card border-border relative flex flex-col items-center gap-5 overflow-hidden rounded-xl border px-5 py-12 text-center">
+          <div
+            aria-hidden
+            className="bg-primary/20 pointer-events-none absolute -top-16 left-1/2 size-40 -translate-x-1/2 rounded-full blur-3xl"
+          />
+
+          <div className="bg-primary/10 ring-primary/20 relative flex size-16 items-center justify-center rounded-full ring-4">
+            <CircleAlert className="text-primary size-7" />
+          </div>
+
+          <h1 className="relative text-lg font-semibold">
+            {t('bingos.rounds.details.notFound', {
+              defaultValue: 'Rodada não encontrada',
+            })}
+          </h1>
+
+          <Link
+            to="/bingos"
+            className="bg-primary text-primary-foreground relative inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
+          >
+            <ArrowLeft className="size-4" />
+            {t('bingos.details.back')}
+          </Link>
+        </section>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-7">
       <div className="flex items-center gap-3">
         <Link
           to={`/bingos/${bingo.id}`}
-          className="text-muted-foreground hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
           aria-label={t('bingos.details.back')}
         >
           <ArrowLeft className="size-5" />
@@ -316,12 +353,18 @@ export function RoundDetails() {
         </div>
 
         <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${
+          className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
             isFinished
               ? 'bg-muted text-muted-foreground'
               : 'bg-primary/10 text-primary'
           }`}
         >
+          <span
+            className={`size-1.5 rounded-full ${
+              isFinished ? 'bg-muted-foreground/60' : 'bg-primary animate-pulse'
+            }`}
+          />
+
           {isFinished
             ? t('bingos.rounds.details.finished', {
                 defaultValue: 'Finalizada',
@@ -334,7 +377,7 @@ export function RoundDetails() {
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-sm font-semibold">
+          <h2 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
             {t('bingos.rounds.details.rulesTitle')}
           </h2>
 
@@ -343,7 +386,7 @@ export function RoundDetails() {
               type="button"
               onClick={startEditingRules}
               disabled={isSaving}
-              className="text-primary hover:bg-primary/10 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium disabled:opacity-50"
+              className="text-primary hover:bg-primary/10 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50"
             >
               <Pencil className="size-4" />
               {t('bingos.rounds.details.editRules')}
@@ -355,7 +398,7 @@ export function RoundDetails() {
           {round.rules.map((rule) => (
             <span
               key={rule}
-              className="bg-muted rounded-full px-3 py-1 text-xs font-medium"
+              className="bg-muted text-foreground/80 rounded-full px-3 py-1 text-xs font-medium"
             >
               {t(`bingos.rounds.rules.${rule}.title`)}
             </span>
@@ -363,12 +406,17 @@ export function RoundDetails() {
         </div>
 
         {editingRules && !isFinished && (
-          <div className="bg-card border-border flex flex-col gap-4 rounded-xl border p-4">
-            <p className="text-muted-foreground text-sm">
+          <div className="bg-card border-border relative flex flex-col gap-4 overflow-hidden rounded-xl border p-4">
+            <div
+              aria-hidden
+              className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-24 rounded-full blur-3xl"
+            />
+
+            <p className="text-muted-foreground relative text-sm">
               {t('bingos.rounds.details.editRulesDescription')}
             </p>
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="relative grid grid-cols-1 gap-2 sm:grid-cols-2">
               {availableRules.map((rule) => {
                 const selected = selectedRules.includes(rule)
 
@@ -379,17 +427,17 @@ export function RoundDetails() {
                     onClick={() => toggleRule(rule)}
                     disabled={isSaving}
                     aria-pressed={selected}
-                    className={`flex items-center gap-3 rounded-lg border p-3 text-left text-sm font-medium transition-colors disabled:opacity-50 ${
+                    className={`flex items-center gap-3 rounded-lg border p-3 text-left text-sm font-medium transition-all disabled:opacity-50 ${
                       selected
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
+                        ? 'border-primary bg-primary/5 shadow-sm'
+                        : 'border-border bg-card hover:border-primary/50 hover:bg-accent/50'
                     }`}
                   >
                     <span
-                      className={`flex size-5 shrink-0 items-center justify-center rounded border ${
+                      className={`flex size-5 shrink-0 items-center justify-center rounded border transition-colors ${
                         selected
                           ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border'
+                          : 'border-border bg-background'
                       }`}
                     >
                       {selected && <Check className="size-3.5" />}
@@ -401,12 +449,12 @@ export function RoundDetails() {
             </div>
 
             {rulesError && (
-              <p role="alert" className="text-destructive text-sm">
+              <p role="alert" className="text-destructive relative text-sm">
                 {rulesError}
               </p>
             )}
 
-            <div className="flex gap-3">
+            <div className="relative flex gap-3">
               <button
                 type="button"
                 onClick={() => {
@@ -414,7 +462,7 @@ export function RoundDetails() {
                   setRulesError(null)
                 }}
                 disabled={isSaving}
-                className="border-border hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-2.5 text-sm font-medium disabled:opacity-50"
+                className="border-border bg-card hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {t('bingos.rounds.details.cancelRules')}
               </button>
@@ -422,7 +470,7 @@ export function RoundDetails() {
                 type="button"
                 onClick={handleSaveRules}
                 disabled={isSaving || selectedRules.length === 0}
-                className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium disabled:opacity-50"
+                className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 <Save className="size-4" />
                 {isSaving
@@ -434,20 +482,25 @@ export function RoundDetails() {
         )}
       </section>
 
-      <section className="bg-card border-border flex flex-col items-center gap-2 rounded-xl border p-5 text-center">
-        <p className="text-muted-foreground text-sm">
+      <section className="bg-card border-border relative flex flex-col items-center gap-2 overflow-hidden rounded-xl border p-5 text-center">
+        <div
+          aria-hidden
+          className="bg-primary/15 pointer-events-none absolute -top-16 left-1/2 size-40 -translate-x-1/2 rounded-full blur-3xl"
+        />
+
+        <p className="text-muted-foreground relative text-sm">
           {t('bingos.rounds.details.lastNumber', {
             defaultValue: 'Último número anunciado',
           })}
         </p>
 
-        <div className="text-primary text-4xl font-bold tabular-nums">
+        <div className="text-primary relative text-4xl font-bold tabular-nums">
           {lastNumber !== undefined
             ? `${getLetter(lastNumber)} ${lastNumber}`
             : '—'}
         </div>
 
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground relative text-sm">
           {t('bingos.rounds.details.drawnCount', {
             count: drawnNumbers.length,
             defaultValue: '{{count}} de 75 números registrados',
@@ -459,7 +512,7 @@ export function RoundDetails() {
             type="button"
             onClick={handleUndo}
             disabled={isSaving || drawnNumbers.length === 0}
-            className="text-muted-foreground hover:text-foreground mt-2 flex items-center gap-2 text-sm font-medium disabled:opacity-40"
+            className="text-muted-foreground hover:bg-accent hover:text-foreground relative mt-2 flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <RotateCcw className="size-4" />
 
@@ -473,12 +526,12 @@ export function RoundDetails() {
       {winners.length > 0 && (
         <div
           role="status"
-          className="border-primary/40 bg-primary/5 flex items-start gap-3 rounded-xl border p-4"
+          className="border-bingo-win/40 bg-bingo-win/10 flex items-start gap-3 rounded-xl border p-4"
         >
-          <Trophy className="text-primary mt-0.5 size-5 shrink-0" />
+          <Trophy className="text-bingo-win mt-0.5 size-5 shrink-0" />
 
           <div>
-            <p className="font-semibold">
+            <p className="text-bingo-win font-semibold">
               {t('bingos.rounds.details.winnerAlert', {
                 count: winners.length,
                 defaultValue: '{{count}} cartela(s) completaram uma regra!',
@@ -493,7 +546,7 @@ export function RoundDetails() {
       )}
 
       {almostWinning.length > 0 && (
-        <div className="border-border bg-muted/50 flex items-start gap-3 rounded-xl border p-4">
+        <div className="border-border bg-card flex items-start gap-3 rounded-xl border p-4">
           <CircleAlert className="text-primary mt-0.5 size-5 shrink-0" />
 
           <div>
@@ -519,7 +572,7 @@ export function RoundDetails() {
             })}
           </h2>
 
-          <span className="text-muted-foreground text-sm">
+          <span className="text-muted-foreground text-sm tabular-nums">
             {drawnNumbers.length}/75
           </span>
         </div>
@@ -542,10 +595,10 @@ export function RoundDetails() {
                 onClick={() => toggleLetter(letter)}
                 aria-expanded={isExpanded}
                 aria-controls="round-number-options"
-                className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border px-1 py-3 transition-colors ${
+                className={`group flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl border px-1 py-3 transition-all ${
                   isExpanded
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'bg-card border-border hover:border-primary/50'
+                    ? 'border-primary bg-primary/10 text-primary shadow-sm'
+                    : 'bg-card border-border hover:border-primary/50 hover:shadow-sm'
                 }`}
               >
                 <span className="text-2xl font-bold">{letter}</span>
@@ -554,7 +607,11 @@ export function RoundDetails() {
                   {start}–{end}
                 </span>
 
-                <span className="text-muted-foreground text-[10px] tabular-nums">
+                <span
+                  className={`text-[10px] tabular-nums ${
+                    isExpanded ? 'text-primary' : 'text-muted-foreground'
+                  }`}
+                >
                   {drawnCount}/15
                 </span>
 
@@ -583,7 +640,7 @@ export function RoundDetails() {
               <button
                 type="button"
                 onClick={() => setActiveLetter(null)}
-                className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs font-medium"
+                className="text-muted-foreground hover:bg-accent hover:text-foreground flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors"
               >
                 {t('bingos.rounds.details.hideNumbers', {
                   defaultValue: 'Ocultar números',
@@ -606,10 +663,10 @@ export function RoundDetails() {
                     disabled={isFinished || isSaving || isDrawn}
                     aria-pressed={isDrawn}
                     aria-label={`${activeLetter} ${number}`}
-                    className={`flex aspect-square items-center justify-center rounded-lg border text-sm font-semibold tabular-nums transition-colors sm:text-base ${
+                    className={`flex aspect-square items-center justify-center rounded-lg border text-sm font-semibold tabular-nums transition-all sm:text-base ${
                       isDrawn
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'bg-card border-border hover:border-primary/50'
+                        ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+                        : 'bg-card border-border hover:border-primary hover:bg-primary/5'
                     } disabled:cursor-default`}
                   >
                     {number}
@@ -649,9 +706,9 @@ export function RoundDetails() {
               return (
                 <li
                   key={`${index}-${number}`}
-                  className={`flex aspect-square flex-col items-center justify-center gap-0.5 rounded-sm ${
+                  className={`flex aspect-square flex-col items-center justify-center gap-0.5 rounded-sm transition-colors ${
                     isLast
-                      ? 'bg-primary text-primary-foreground'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'bg-muted text-foreground'
                   }`}
                 >
@@ -683,7 +740,7 @@ export function RoundDetails() {
             })}
           </h2>
 
-          <span className="text-muted-foreground text-sm">
+          <span className="text-muted-foreground text-sm tabular-nums">
             {progress.length}
           </span>
         </div>
@@ -703,21 +760,33 @@ export function RoundDetails() {
 
         {progress.map(({ card, remaining, winningRule }) => {
           const isExpanded = expandedCards.includes(card.id)
+          const isWinner = remaining === 0
+          const isAlmost = remaining === 1
 
           return (
             <div
               key={card.id}
-              className="bg-card border-border overflow-hidden rounded-xl border"
+              className={`bg-card overflow-hidden rounded-xl border transition-colors ${
+                isWinner
+                  ? 'border-bingo-win/40'
+                  : isAlmost
+                    ? 'border-primary/40'
+                    : 'border-border'
+              }`}
             >
               <button
                 type="button"
                 onClick={() => toggleCard(card.id)}
                 aria-expanded={isExpanded}
-                className="flex w-full items-center gap-3 p-4 text-left"
+                className="hover:bg-accent/30 flex w-full items-center gap-3 p-4 text-left transition-colors"
               >
-                <div className="bg-primary/10 flex size-10 shrink-0 items-center justify-center rounded-lg">
-                  {remaining === 0 ? (
-                    <Trophy className="text-primary size-5" />
+                <div
+                  className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${
+                    isWinner ? 'bg-bingo-win/10' : 'bg-primary/10'
+                  }`}
+                >
+                  {isWinner ? (
+                    <Trophy className="text-bingo-win size-5" />
                   ) : (
                     <Ticket className="text-primary size-5" />
                   )}
@@ -726,8 +795,14 @@ export function RoundDetails() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{card.name}</p>
 
-                  <p className="text-muted-foreground mt-1 text-xs">
-                    {remaining === 0
+                  <p
+                    className={`mt-1 text-xs ${
+                      isWinner
+                        ? 'text-bingo-win font-medium'
+                        : 'text-muted-foreground'
+                    }`}
+                  >
+                    {isWinner
                       ? t('bingos.rounds.details.winner', {
                           defaultValue: 'Bingo! Regra completada',
                         })
@@ -738,10 +813,11 @@ export function RoundDetails() {
                   </p>
                 </div>
 
-                {remaining === 0 ? (
-                  <CheckCircle2 className="text-primary size-5 shrink-0" />
-                ) : remaining === 1 ? (
-                  <span className="bg-primary/10 text-primary rounded-full px-2 py-1 text-xs font-medium">
+                {isWinner ? (
+                  <CheckCircle2 className="text-bingo-win size-5 shrink-0" />
+                ) : isAlmost ? (
+                  <span className="bg-primary/10 text-primary flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-xs font-medium">
+                    <span className="bg-primary size-1.5 animate-pulse rounded-full" />
                     {t('bingos.rounds.details.almost', {
                       defaultValue: 'Falta 1',
                     })}
@@ -758,7 +834,7 @@ export function RoundDetails() {
               {isExpanded && (
                 <div className="border-border border-t p-4">
                   {winningRule && (
-                    <p className="text-primary mb-3 flex items-center gap-2 text-sm font-medium">
+                    <p className="text-bingo-win mb-3 flex items-center gap-2 text-sm font-medium">
                       <Trophy className="size-4" />
                       {t(`bingos.rounds.rules.${winningRule}.title`)}
                     </p>
@@ -808,20 +884,25 @@ export function RoundDetails() {
       {!isFinished && (
         <section className="border-border flex flex-col gap-3 border-t pt-5">
           {showFinishConfirmation ? (
-            <div className="bg-card border-border flex flex-col gap-4 rounded-xl border p-4">
-              <p className="text-sm font-medium">
+            <div className="bg-card border-border relative flex flex-col gap-4 overflow-hidden rounded-xl border p-4">
+              <div
+                aria-hidden
+                className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-24 rounded-full blur-3xl"
+              />
+
+              <p className="relative text-sm font-medium">
                 {t('bingos.rounds.details.confirmFinish', {
                   defaultValue:
                     'Deseja finalizar esta rodada? Os números registrados serão preservados no histórico.',
                 })}
               </p>
 
-              <div className="flex gap-3">
+              <div className="relative flex gap-3">
                 <button
                   type="button"
                   onClick={() => setShowFinishConfirmation(false)}
                   disabled={isSaving}
-                  className="border-border flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium"
+                  className="border-border bg-card hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium transition-colors disabled:opacity-50"
                 >
                   {t('bingos.rounds.new.cancel')}
                 </button>
@@ -830,7 +911,7 @@ export function RoundDetails() {
                   type="button"
                   onClick={handleFinish}
                   disabled={isSaving}
-                  className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium disabled:opacity-50"
+                  className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
                   <Flag className="size-4" />
 
@@ -844,7 +925,7 @@ export function RoundDetails() {
             <button
               type="button"
               onClick={() => setShowFinishConfirmation(true)}
-              className="border-border hover:bg-accent flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-medium"
+              className="border-border bg-card hover:bg-accent flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-medium transition-colors"
             >
               <Flag className="size-4" />
 

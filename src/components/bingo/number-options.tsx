@@ -38,12 +38,13 @@ export function NumberOptions({
               type="button"
               disabled={isUsed}
               onClick={() => onSelect(number)}
-              className={`flex aspect-square items-center justify-center rounded-lg border text-base font-semibold transition-colors ${
+              aria-pressed={isCurrent}
+              className={`flex aspect-square items-center justify-center rounded-lg border text-base font-semibold tabular-nums transition-all ${
                 isCurrent
-                  ? 'border-primary bg-primary/10 text-primary'
+                  ? 'border-primary bg-primary/10 text-primary ring-primary/30 scale-105 ring-2'
                   : isUsed
                     ? 'border-border bg-muted text-muted-foreground cursor-not-allowed opacity-40'
-                    : 'border-border bg-background hover:border-primary hover:bg-primary/5'
+                    : 'border-border bg-card hover:border-primary hover:bg-primary/5 hover:shadow-sm'
               }`}
             >
               {number}
@@ -56,7 +57,7 @@ export function NumberOptions({
         <button
           type="button"
           onClick={onRemove}
-          className="text-destructive border-border hover:bg-destructive/10 flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors"
+          className="text-destructive border-border bg-card hover:bg-destructive/10 flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors"
         >
           <Trash2 className="size-4" />
           {t('cards.new.removeNumber')}

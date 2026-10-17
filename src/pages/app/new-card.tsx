@@ -44,6 +44,9 @@ export function NewCard({ initialCard }: NewCardProps) {
     (number): number is number => number !== null,
   )
 
+  const isComplete = filledCount === TOTAL_NUMBERS
+  const progressPercent = Math.round((filledCount / TOTAL_NUMBERS) * 100)
+
   function handlePositionClick(position: number) {
     if (position === FREE_POSITION || isSaving) return
 
@@ -124,11 +127,11 @@ export function NewCard({ initialCard }: NewCardProps) {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-xl flex-col gap-7">
       <div className="flex items-center gap-3">
         <Link
           to={returnTo}
-          className="text-muted-foreground hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
           aria-label={t('cards.new.back')}
         >
           <ArrowLeft className="size-5" />
@@ -163,30 +166,57 @@ export function NewCard({ initialCard }: NewCardProps) {
           placeholder={t('cards.new.namePlaceholder')}
           maxLength={60}
           disabled={isSaving}
-          className="bg-background border-input focus-visible:ring-ring w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus-visible:ring-2 disabled:opacity-50"
+          className="bg-card border-input focus-visible:border-primary focus-visible:ring-ring w-full rounded-lg border px-3 py-2.5 text-sm transition-colors outline-none focus-visible:ring-2 disabled:opacity-50"
         />
       </div>
 
-      <section className="bg-card border-border flex flex-col gap-4 rounded-xl border p-4">
-        <div className="flex items-center justify-between gap-3">
+      <section className="bg-card border-border relative flex flex-col gap-4 overflow-hidden rounded-xl border p-4">
+        <div
+          aria-hidden
+          className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-28 rounded-full blur-3xl"
+        />
+
+        <div className="relative flex items-center justify-between gap-3">
           <h2 className="text-base font-semibold">
             {t('cards.new.cardNumbers')}
           </h2>
 
-          <span className="bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-semibold">
+          <span
+            className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+              isComplete
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-primary/10 text-primary'
+            }`}
+          >
+            {isComplete ? (
+              <span className="bg-primary-foreground size-1.5 rounded-full" />
+            ) : (
+              <span className="bg-primary size-1.5 animate-pulse rounded-full" />
+            )}
             {filledCount}/{TOTAL_NUMBERS}
           </span>
         </div>
 
-        <p className="text-muted-foreground text-sm">
+        {/* Barra de progresso sutil */}
+        <div
+          aria-hidden
+          className="bg-muted relative h-1 w-full overflow-hidden rounded-full"
+        >
+          <div
+            className="bg-primary h-full rounded-full transition-all duration-300"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+
+        <p className="text-muted-foreground relative text-sm">
           {t('cards.new.instructions')}
         </p>
 
-        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+        <div className="relative grid grid-cols-5 gap-1.5 sm:gap-2">
           {columns.map((column) => (
             <div
               key={column}
-              className="bg-primary text-primary-foreground flex h-10 items-center justify-center rounded-lg text-lg font-bold"
+              className="bg-primary text-primary-foreground flex h-10 items-center justify-center rounded-lg text-lg font-bold shadow-sm"
             >
               {column}
             </div>
@@ -200,7 +230,7 @@ export function NewCard({ initialCard }: NewCardProps) {
               return (
                 <div
                   key={position}
-                  className="bg-primary/10 text-primary flex aspect-square flex-col items-center justify-center rounded-lg"
+                  className="bg-primary/10 text-primary ring-primary/20 flex aspect-square flex-col items-center justify-center rounded-lg ring-1"
                 >
                   <Star className="size-5" />
 
@@ -219,8 +249,10 @@ export function NewCard({ initialCard }: NewCardProps) {
                 disabled={isSaving}
                 className={`flex aspect-square items-center justify-center rounded-lg border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
                   isSelected
-                    ? 'border-primary bg-primary/10 text-primary ring-primary/30 ring-2'
-                    : 'border-border bg-background hover:border-primary hover:bg-primary/5'
+                    ? 'border-primary bg-primary/10 text-primary ring-primary/30 scale-105 ring-2'
+                    : number === null
+                      ? 'border-border bg-background hover:border-primary hover:bg-primary/5'
+                      : 'border-border bg-card hover:border-primary/50 hover:bg-primary/5'
                 }`}
                 aria-label={t('cards.new.selectPosition', {
                   position: position + 1,
@@ -236,7 +268,7 @@ export function NewCard({ initialCard }: NewCardProps) {
           })}
         </div>
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="relative flex items-center justify-between gap-3">
           <span className="text-muted-foreground text-xs">
             {t('cards.new.remaining', {
               count: TOTAL_NUMBERS - filledCount,
@@ -247,7 +279,7 @@ export function NewCard({ initialCard }: NewCardProps) {
             type="button"
             onClick={handleClearCard}
             disabled={filledCount === 0 || isSaving}
-            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+            className="text-muted-foreground hover:bg-accent hover:text-foreground inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <RotateCcw className="size-3.5" />
             {t('cards.new.clear')}
@@ -265,7 +297,7 @@ export function NewCard({ initialCard }: NewCardProps) {
         <div className="flex gap-3">
           <Link
             to={returnTo}
-            className="border-border hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium transition-colors"
+            className="border-border bg-card hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium transition-colors"
           >
             {t('cards.new.cancel')}
           </Link>
@@ -273,8 +305,8 @@ export function NewCard({ initialCard }: NewCardProps) {
           <button
             type="button"
             onClick={handleSaveCard}
-            disabled={filledCount !== TOTAL_NUMBERS || isSaving}
-            className="bg-primary text-primary-foreground inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!isComplete || isSaving}
+            className="bg-primary text-primary-foreground inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Save className="size-4" />
 

@@ -110,7 +110,7 @@ export function Cards() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-7">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
@@ -124,7 +124,7 @@ export function Cards() {
 
         <Link
           to="/cards/new"
-          className="bg-primary text-primary-foreground inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-opacity hover:opacity-90"
+          className="bg-primary text-primary-foreground inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
         >
           <Plus className="size-4" />
           <span>{t('cards.newCard')}</span>
@@ -141,7 +141,7 @@ export function Cards() {
             onChange={(event) => setSearch(event.target.value)}
             placeholder={t('cards.searchPlaceholder')}
             aria-label={t('cards.searchPlaceholder')}
-            className="bg-background border-input focus-visible:ring-ring w-full rounded-lg border py-3 pr-4 pl-10 text-sm outline-none focus-visible:ring-2"
+            className="bg-card border-input focus-visible:border-primary focus-visible:ring-ring w-full rounded-lg border py-3 pr-4 pl-10 text-sm transition-colors outline-none focus-visible:ring-2"
           />
         </div>
       )}
@@ -159,12 +159,17 @@ export function Cards() {
       )}
 
       {!isLoading && cards.length === 0 && (
-        <section className="bg-card border-border flex flex-col items-center gap-4 rounded-xl border px-5 py-10 text-center">
-          <div className="bg-primary/10 flex size-14 items-center justify-center rounded-full">
+        <section className="bg-card border-border relative flex flex-col items-center gap-5 overflow-hidden rounded-xl border px-5 py-12 text-center">
+          <div
+            aria-hidden
+            className="bg-primary/20 pointer-events-none absolute -top-16 left-1/2 size-40 -translate-x-1/2 rounded-full blur-3xl"
+          />
+
+          <div className="bg-primary/10 ring-primary/20 relative flex size-16 items-center justify-center rounded-full ring-4">
             <Grid3X3 className="text-primary size-7" />
           </div>
 
-          <div>
+          <div className="relative">
             <h2 className="text-lg font-semibold">{t('cards.empty.title')}</h2>
 
             <p className="text-muted-foreground mx-auto mt-2 max-w-sm text-sm">
@@ -174,7 +179,7 @@ export function Cards() {
 
           <Link
             to="/cards/new"
-            className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-opacity hover:opacity-90"
+            className="bg-primary text-primary-foreground relative inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
           >
             <Plus className="size-4" />
             {t('cards.empty.addCard')}
@@ -197,9 +202,20 @@ export function Cards() {
             return (
               <article
                 key={card.id}
-                className="bg-card border-border flex flex-col gap-4 rounded-xl border p-4"
+                className={`group bg-card relative flex flex-col gap-4 overflow-hidden rounded-xl border p-4 transition-all hover:shadow-sm ${
+                  isDeleting
+                    ? 'border-destructive/40'
+                    : 'border-border hover:border-primary/50'
+                }`}
               >
-                <div className="flex items-start justify-between gap-2">
+                {!isDeleting && (
+                  <div
+                    aria-hidden
+                    className="bg-primary/10 pointer-events-none absolute -top-8 -right-8 size-20 rounded-full blur-2xl"
+                  />
+                )}
+
+                <div className="relative flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <h2 className="truncate text-base font-semibold">
                       {card.name}
@@ -219,7 +235,7 @@ export function Cards() {
                       disabled={isBusy}
                       title={t('cards.actions.edit')}
                       aria-label={t('cards.actions.edit')}
-                      className="text-muted-foreground hover:text-foreground flex size-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50"
+                      className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50"
                     >
                       <Pencil className="size-4" />
                     </button>
@@ -230,7 +246,7 @@ export function Cards() {
                       disabled={isBusy}
                       title={t('cards.actions.duplicate')}
                       aria-label={t('cards.actions.duplicate')}
-                      className="text-muted-foreground hover:text-foreground flex size-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50"
+                      className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50"
                     >
                       <Copy className="size-4" />
                     </button>
@@ -245,17 +261,23 @@ export function Cards() {
                       title={t('cards.actions.delete')}
                       aria-label={t('cards.actions.delete')}
                       aria-expanded={isDeleting}
-                      className="text-destructive hover:bg-destructive/10 flex size-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50"
+                      className={`flex size-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50 ${
+                        isDeleting
+                          ? 'bg-destructive/10 text-destructive'
+                          : 'text-destructive hover:bg-destructive/10'
+                      }`}
                     >
                       <Trash2 className="size-4" />
                     </button>
                   </div>
                 </div>
 
-                <CardPreview numbers={card.numbers} />
+                <div className="relative">
+                  <CardPreview numbers={card.numbers} />
+                </div>
 
                 {isDeleting && (
-                  <div className="flex flex-col gap-3">
+                  <div className="border-destructive/20 bg-destructive/5 relative flex flex-col gap-3 rounded-lg border p-3">
                     <p className="text-muted-foreground text-sm">
                       {t('cards.actions.deleteConfirmation', {
                         name: card.name,
@@ -267,7 +289,7 @@ export function Cards() {
                         type="button"
                         onClick={() => setDeletingId(null)}
                         disabled={isBusy}
-                        className="border-border hover:bg-accent rounded-full border px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                        className="border-border bg-card hover:bg-accent rounded-lg border px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50"
                       >
                         {t('cards.actions.cancel')}
                       </button>
@@ -276,7 +298,7 @@ export function Cards() {
                         type="button"
                         onClick={() => handleDelete(card.id)}
                         disabled={isBusy}
-                        className="bg-destructive text-destructive-foreground rounded-full px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
+                        className="bg-destructive text-destructive-foreground rounded-lg px-3 py-2 text-sm font-medium shadow-sm transition-opacity hover:opacity-90 disabled:opacity-50"
                       >
                         {busyId === card.id
                           ? t('cards.actions.deleting')
