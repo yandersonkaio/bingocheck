@@ -105,13 +105,23 @@ export function RoundDetails() {
     [roundId],
   )
 
-  const cards = useLiveQuery(async (): Promise<BingoCard[]> => {
-    if (!bingo) return []
+  // Legacy active rounds keep the old behavior. Finished legacy rounds
+  // cannot reliably reconstruct their original participants.
+  const legacyCards = useLiveQuery(async (): Promise<BingoCard[]> => {
+    if (
+      !bingo ||
+      !round ||
+      round.cards !== undefined ||
+      round.status === 'finished'
+    ) {
+      return []
+    }
 
     const results = await db.cards.bulkGet(bingo.cardIds)
-
     return results.filter((card): card is BingoCard => card !== undefined)
-  }, [bingo])
+  }, [bingo, round])
+
+  const cards = round?.cards ?? legacyCards
 
   const drawnNumbers = useMemo(
     () => round?.drawnNumbers ?? [],
@@ -541,11 +551,18 @@ export function RoundDetails() {
           </span>
         </div>
 
-        {progress.length === 0 && (
-          <div className="border-border text-muted-foreground rounded-xl border border-dashed p-6 text-center text-sm">
-            {t('bingos.details.noCards')}
+        {isFinished && round.cards === undefined && (
+          <div className="border-border text-muted-foreground rounded-xl border border-dashed p-4 text-sm">
+            {t('bingos.rounds.details.legacyCardsUnavailable')}
           </div>
         )}
+
+        {progress.length === 0 &&
+          !(isFinished && round.cards === undefined) && (
+            <div className="border-border text-muted-foreground rounded-xl border border-dashed p-6 text-center text-sm">
+              {t('bingos.details.noCards')}
+            </div>
+          )}
 
         {progress.map(({ card, remaining, winningRule }) => {
           const isExpanded = expandedCards.includes(card.id)

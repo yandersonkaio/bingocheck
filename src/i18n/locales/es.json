@@ -202,6 +202,7 @@
         "almost": "Falta 1",
         "confirmFinish": "¿Quieres finalizar esta ronda? Los números registrados se conservarán en el historial.",
         "finish": "Finalizar ronda",
+        "legacyCardsUnavailable": "Los cartones de esta ronda antigua no se conservaron. Los números sorteados y el resultado registrado siguen disponibles.",
         "finishedMessage": "Ronda finalizada. El historial está disponible para consulta."
       },
       "new": {

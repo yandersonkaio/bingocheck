@@ -202,6 +202,7 @@
         "almost": "1 to go",
         "confirmFinish": "Do you want to finish this round? The recorded numbers will be preserved in the history.",
         "finish": "Finish round",
+        "legacyCardsUnavailable": "The cards from this older round were not preserved. The drawn numbers and recorded result are still available.",
         "finishedMessage": "Round finished. History is available for review."
       },
       "new": {

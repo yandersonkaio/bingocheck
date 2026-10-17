@@ -21,7 +21,6 @@ export interface Bingo {
 }
 
 export type RoundRule = 'line' | 'column' | 'diagonal' | 'full_card'
-
 export type RoundStatus = 'in_progress' | 'finished'
 
 export interface BingoRound {
@@ -31,6 +30,7 @@ export interface BingoRound {
   rules: RoundRule[]
   drawnNumbers: number[]
   status: RoundStatus
+  cards?: BingoCard[]
   winners?: {
     cardId: string
     cardName: string

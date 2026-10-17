@@ -202,6 +202,7 @@
         "almost": "Ne manca 1",
         "confirmFinish": "Vuoi terminare questo turno? I numeri registrati saranno conservati nella cronologia.",
         "finish": "Termina turno",
+        "legacyCardsUnavailable": "Le cartelle di questo turno precedente non sono state conservate. I numeri estratti e il risultato registrato rimangono disponibili.",
         "finishedMessage": "Turno terminato. La cronologia è disponibile per la consultazione."
       },
       "new": {
