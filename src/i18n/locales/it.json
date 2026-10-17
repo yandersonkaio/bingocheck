@@ -15,11 +15,6 @@
       "description": "Crea una partita di bingo per iniziare a seguire i numeri estratti e le tue cartelle.",
       "createBingo": "Crea partita"
     },
-    "quickAccess": {
-      "title": "Accesso rapido",
-      "myCards": "Le mie cartelle",
-      "bingoHistory": "Cronologia delle partite"
-    },
     "activeRound": {
       "title": "Turno in corso"
     },

@@ -15,11 +15,6 @@
       "description": "Crie um bingo para começar a acompanhar os números sorteados e suas cartelas.",
       "createBingo": "Criar bingo"
     },
-    "quickAccess": {
-      "title": "Acesso rápido",
-      "myCards": "Minhas cartelas",
-      "bingoHistory": "Histórico de bingos"
-    },
     "activeRound": {
       "title": "Rodada em andamento"
     },

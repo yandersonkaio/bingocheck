@@ -15,11 +15,6 @@
       "description": "Crea una partida de bingo para empezar a seguir los números sorteados y tus cartones.",
       "createBingo": "Crear partida"
     },
-    "quickAccess": {
-      "title": "Acceso rápido",
-      "myCards": "Mis cartones",
-      "bingoHistory": "Historial de partidas"
-    },
     "activeRound": {
       "title": "Ronda en curso"
     },

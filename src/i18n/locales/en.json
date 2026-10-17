@@ -15,11 +15,6 @@
       "description": "Create a bingo game to start tracking drawn numbers and your cards.",
       "createBingo": "Create bingo game"
     },
-    "quickAccess": {
-      "title": "Quick access",
-      "myCards": "My cards",
-      "bingoHistory": "Bingo history"
-    },
     "activeRound": {
       "title": "Round in progress"
     },

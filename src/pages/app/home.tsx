@@ -5,7 +5,6 @@ import {
   ChevronRight,
   CirclePlay,
   Clock3,
-  History,
   Layers3,
   Plus,
   Ticket,
@@ -178,7 +177,9 @@ export function Home() {
               <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
                 <Clock3 className="size-3.5" />
 
-                {t('bingos.rounds.details.drawnCount')}
+                {t('bingos.rounds.details.drawnCount', {
+                  count: latestActiveRound.drawnNumbers.length,
+                })}
               </p>
             </div>
 
@@ -276,38 +277,6 @@ export function Home() {
           </Link>
         </div>
       )}
-
-      <section className="bg-card border-border rounded-xl border p-4">
-        <h2 className="mb-3 font-semibold">{t('home.quickAccess.title')}</h2>
-
-        <div className="flex flex-col">
-          <Link
-            to="/cards"
-            className="hover:bg-accent flex items-center justify-between rounded-lg px-3 py-3 transition-colors"
-          >
-            <span className="flex items-center gap-3 text-sm">
-              <Layers3 className="text-muted-foreground size-5" />
-
-              {t('home.quickAccess.myCards')}
-            </span>
-
-            <ArrowRight className="text-muted-foreground size-4" />
-          </Link>
-
-          <Link
-            to="/bingos"
-            className="hover:bg-accent flex items-center justify-between rounded-lg px-3 py-3 transition-colors"
-          >
-            <span className="flex items-center gap-3 text-sm">
-              <History className="text-muted-foreground size-5" />
-
-              {t('home.quickAccess.bingoHistory')}
-            </span>
-
-            <ArrowRight className="text-muted-foreground size-4" />
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }
