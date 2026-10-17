@@ -153,7 +153,13 @@
       "savingStatus": "Guardando...",
       "finishBingo": "Finalizar bingo",
       "reopenBingo": "Reabrir bingo",
-      "finishedMessage": "Este bingo ha finalizado. Las rondas y los números anunciados siguen disponibles para consulta."
+      "finishedMessage": "Este bingo ha finalizado. Las rondas y los números anunciados siguen disponibles para consulta.",
+      "manageCards": "Gestionar cartones",
+      "manageCardsDescription": "Selecciona los cartones que deseas vincular a este bingo.",
+      "noAvailableCards": "Todavía no has creado ningún cartón.",
+      "createCard": "Crear cartón",
+      "saveCards": "Guardar cambios",
+      "manageCardsError": "No se pudieron actualizar los cartones. Inténtalo de nuevo."
     },
     "rounds": {
       "roundNumber": "Ronda {{number}}",

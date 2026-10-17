@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import {
   ArrowLeft,
   CalendarDays,
+  Check,
   CheckCircle2,
   ChevronRight,
   CirclePlay,
@@ -14,13 +15,19 @@ import {
   Ticket,
   Trash2,
   Trophy,
+  X,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 
 import { type BingoCard, type BingoRound, db } from '@/lib/database'
-import { finishBingo, reopenBingo } from '@/services/bingo-service'
+import {
+  finishBingo,
+  reopenBingo,
+  updateBingoCards,
+} from '@/services/bingo-service'
 
 export function BingoDetails() {
   const { id } = useParams()
@@ -31,6 +38,10 @@ export function BingoDetails() {
   )
   const [isSaving, setIsSaving] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false)
+  const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
+  const [cardError, setCardError] = useState<string | null>(null)
+  const [isSavingCards, setIsSavingCards] = useState(false)
 
   const bingo = useLiveQuery(
     () => (id ? db.bingos.get(id).then((result) => result ?? null) : null),
@@ -43,6 +54,21 @@ export function BingoDetails() {
     return db.cards.bulkGet(bingo.cardIds)
   }, [bingo])
 
+  const allCards = useLiveQuery(() => db.cards.toArray(), [])
+
+  useEffect(() => {
+    if (!isCardModalOpen) return
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape' && !isSavingCards) {
+        setIsCardModalOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isCardModalOpen, isSavingCards])
+
   const rounds = useLiveQuery(async (): Promise<BingoRound[]> => {
     if (!id) return []
 
@@ -50,6 +76,49 @@ export function BingoDetails() {
 
     return results.sort((a, b) => b.number - a.number)
   }, [id])
+
+  function openCardModal() {
+    if (
+      !bingo ||
+      bingo.status === 'finished' ||
+      rounds?.some((round) => round.status === 'in_progress')
+    )
+      return
+
+    setSelectedCardIds(bingo.cardIds)
+    setCardError(null)
+    setIsCardModalOpen(true)
+  }
+
+  function toggleSelectedCard(cardId: string) {
+    setSelectedCardIds((previous) =>
+      previous.includes(cardId)
+        ? previous.filter((id) => id !== cardId)
+        : [...previous, cardId],
+    )
+  }
+
+  async function handleSaveCards() {
+    if (!id || isSavingCards) return
+
+    setIsSavingCards(true)
+    setCardError(null)
+
+    try {
+      await updateBingoCards(id, selectedCardIds)
+      setIsCardModalOpen(false)
+    } catch (error) {
+      console.error('Failed to update bingo cards:', error)
+      setCardError(
+        t('bingos.details.manageCardsError', {
+          defaultValue:
+            'Não foi possível atualizar as cartelas. Tente novamente.',
+        }),
+      )
+    } finally {
+      setIsSavingCards(false)
+    }
+  }
 
   function formatDate(date: string | null) {
     if (!date) {
@@ -126,6 +195,8 @@ export function BingoDetails() {
   const finishedRounds = rounds.filter((round) => round.status === 'finished')
 
   const isBingoFinished = bingo.status === 'finished'
+  const canStartRound = cards !== undefined && linkedCards.length > 0
+  const canManageCards = !isBingoFinished && !activeRound
 
   const canFinishBingo =
     !isBingoFinished && !activeRound && finishedRounds.length > 0
@@ -137,7 +208,6 @@ export function BingoDetails() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      {/* Navegação e ações */}
       <div className="flex items-center gap-3">
         <Link
           to="/bingos"
@@ -151,7 +221,6 @@ export function BingoDetails() {
           {t('bingos.details.back')}
         </span>
 
-        {/* Ações visuais: serão implementadas depois */}
         <span
           className="text-muted-foreground flex size-9 items-center justify-center rounded-lg opacity-50"
           title={t('bingos.details.edit', {
@@ -171,7 +240,6 @@ export function BingoDetails() {
         </span>
       </div>
 
-      {/* Informações do bingo */}
       <section className="bg-card border-border flex flex-col gap-4 rounded-xl border p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -209,7 +277,6 @@ export function BingoDetails() {
         </div>
       </section>
 
-      {/* Rodadas */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -229,21 +296,35 @@ export function BingoDetails() {
             )}
           </div>
 
-          {rounds.length > 0 && !activeRound && !isBingoFinished && (
-            <Link
-              to={`/bingos/${bingo.id}/rounds/new`}
-              className="bg-primary text-primary-foreground inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90"
-            >
-              <Plus className="size-4" />
+          {rounds.length > 0 &&
+            !activeRound &&
+            !isBingoFinished &&
+            canStartRound && (
+              <Link
+                to={`/bingos/${bingo.id}/rounds/new`}
+                className="bg-primary text-primary-foreground inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-opacity hover:opacity-90"
+              >
+                <Plus className="size-4" />
 
-              {t('bingos.details.newRound', {
-                defaultValue: 'Nova rodada',
-              })}
-            </Link>
-          )}
+                {t('bingos.details.newRound', {
+                  defaultValue: 'Nova rodada',
+                })}
+              </Link>
+            )}
         </div>
 
-        {/* Estado vazio */}
+        {!isBingoFinished &&
+          !activeRound &&
+          !canStartRound &&
+          cards !== undefined && (
+            <div className="border-border bg-muted/40 text-muted-foreground rounded-xl border border-dashed px-4 py-3 text-sm">
+              {t('bingos.details.cardsRequiredToStart', {
+                defaultValue:
+                  'Vincule pelo menos uma cartela a este bingo antes de iniciar uma rodada.',
+              })}
+            </div>
+          )}
+
         {rounds.length === 0 && (
           <div className="bg-card border-border flex flex-col items-center gap-4 rounded-xl border px-5 py-8 text-center sm:py-10">
             <div className="bg-primary/10 flex size-16 items-center justify-center rounded-full">
@@ -265,7 +346,7 @@ export function BingoDetails() {
               </p>
             </div>
 
-            {!isBingoFinished && (
+            {!isBingoFinished && canStartRound && (
               <Link
                 to={`/bingos/${bingo.id}/rounds/new`}
                 className="bg-primary text-primary-foreground flex w-full max-w-sm items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-opacity hover:opacity-90"
@@ -280,7 +361,6 @@ export function BingoDetails() {
           </div>
         )}
 
-        {/* Rodada em andamento */}
         {activeRound && (
           <Link
             to={`/bingos/${bingo.id}/rounds/${activeRound.id}`}
@@ -317,7 +397,6 @@ export function BingoDetails() {
           </Link>
         )}
 
-        {/* Histórico das rodadas finalizadas */}
         {finishedRounds.length > 0 && (
           <div className="flex flex-col gap-3">
             <h3 className="text-muted-foreground text-sm font-medium">
@@ -432,7 +511,6 @@ export function BingoDetails() {
         )}
       </section>
 
-      {/* Cartelas vinculadas */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -446,6 +524,19 @@ export function BingoDetails() {
               })}
             </p>
           </div>
+
+          {canManageCards && (
+            <button
+              type="button"
+              onClick={openCardModal}
+              className="border-border hover:bg-accent inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors"
+            >
+              <Plus className="size-4" />
+              {t('bingos.details.manageCards', {
+                defaultValue: 'Gerenciar cartelas',
+              })}
+            </button>
+          )}
         </div>
 
         {cards === undefined && (
@@ -490,7 +581,150 @@ export function BingoDetails() {
         )}
       </section>
 
-      {/* Encerramento e reabertura do bingo */}
+      {isCardModalOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 sm:items-center sm:p-4"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget && !isSavingCards) {
+                setIsCardModalOpen(false)
+              }
+            }}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="manage-cards-title"
+              className="bg-card border-border flex h-[85dvh] min-h-0 w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border shadow-xl sm:h-auto sm:max-h-[85dvh] sm:rounded-xl"
+            >
+              <div className="border-border shrink-0 border-b px-4 pt-2 pb-4 sm:p-4">
+                <div className="bg-muted-foreground/30 mx-auto mb-3 h-1.5 w-10 rounded-full sm:hidden" />
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h2
+                      id="manage-cards-title"
+                      className="text-lg font-semibold"
+                    >
+                      {t('bingos.details.manageCards', {
+                        defaultValue: 'Gerenciar cartelas',
+                      })}
+                    </h2>
+                    <p className="text-muted-foreground mt-1 text-sm">
+                      {t('bingos.details.manageCardsDescription', {
+                        defaultValue:
+                          'Selecione as cartelas que deseja vincular a este bingo.',
+                      })}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsCardModalOpen(false)}
+                    disabled={isSavingCards}
+                    aria-label={t('bingos.rounds.new.cancel')}
+                    className="text-muted-foreground hover:text-foreground hidden cursor-pointer rounded-lg p-1 disabled:opacity-50 sm:inline-flex"
+                  >
+                    <X className="size-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
+                {allCards === undefined ? (
+                  <p className="text-muted-foreground py-6 text-center text-sm">
+                    {t('bingos.new.loadingCards')}
+                  </p>
+                ) : allCards.length === 0 ? (
+                  <div className="flex flex-col items-center gap-3 py-6 text-center">
+                    <Ticket className="text-muted-foreground size-8" />
+                    <p className="text-muted-foreground text-sm">
+                      {t('bingos.details.noAvailableCards', {
+                        defaultValue:
+                          'Você ainda não cadastrou nenhuma cartela.',
+                      })}
+                    </p>
+                    <Link
+                      to="/cards/new"
+                      className="text-primary text-sm font-medium hover:underline"
+                    >
+                      {t('bingos.details.createCard', {
+                        defaultValue: 'Cadastrar cartela',
+                      })}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {allCards.map((card) => {
+                      const selected = selectedCardIds.includes(card.id)
+
+                      return (
+                        <label
+                          key={card.id}
+                          className={`border-border flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
+                            selected
+                              ? 'border-primary bg-primary/5'
+                              : 'hover:bg-muted/50'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selected}
+                            onChange={() => toggleSelectedCard(card.id)}
+                            disabled={isSavingCards}
+                            className="accent-primary size-4 shrink-0 cursor-pointer"
+                          />
+                          <Grid3X3 className="text-muted-foreground size-5 shrink-0" />
+                          <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                            {card.name}
+                          </span>
+                          {selected && (
+                            <Check className="text-primary size-4 shrink-0" />
+                          )}
+                        </label>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-card border-border flex shrink-0 flex-col gap-3 border-t px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4">
+                <p className="text-muted-foreground text-xs">
+                  {t('bingos.cardCount', { count: selectedCardIds.length })}
+                </p>
+                {cardError && (
+                  <p role="alert" className="text-destructive text-sm">
+                    {cardError}
+                  </p>
+                )}
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsCardModalOpen(false)}
+                    disabled={isSavingCards}
+                    className="border-border hover:bg-accent flex-1 cursor-pointer rounded-lg border px-4 py-3 text-sm font-medium disabled:opacity-50"
+                  >
+                    {t('bingos.rounds.new.cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveCards}
+                    disabled={isSavingCards || allCards === undefined}
+                    className="bg-primary text-primary-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium disabled:opacity-50"
+                  >
+                    {isSavingCards
+                      ? t('bingos.details.savingStatus', {
+                          defaultValue: 'Salvando...',
+                        })
+                      : t('bingos.details.saveCards', {
+                          defaultValue: 'Salvar alterações',
+                        })}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+
       {(canFinishBingo || isBingoFinished) && (
         <section className="border-border flex flex-col gap-3 border-t pt-5">
           {confirmation ? (

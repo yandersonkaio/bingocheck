@@ -21,7 +21,7 @@ export async function createRound({
     throw new Error('Invalid round rules')
   }
 
-  return db.transaction('rw', db.bingos, db.rounds, async () => {
+  return db.transaction('rw', db.bingos, db.rounds, db.cards, async () => {
     const bingo = await db.bingos.get(bingoId)
 
     if (!bingo) {
@@ -30,6 +30,18 @@ export async function createRound({
 
     if (bingo.status === 'finished') {
       throw new Error('Cannot create a round in a finished bingo')
+    }
+
+    if (bingo.cardIds.length === 0) {
+      throw new Error('At least one card must be linked to start a round')
+    }
+
+    const linkedCards = await db.cards.bulkGet(bingo.cardIds)
+
+    const hasValidCard = linkedCards.some((card) => card !== undefined)
+
+    if (!hasValidCard) {
+      throw new Error('No valid cards are linked to this bingo')
     }
 
     const rounds = await db.rounds.where('bingoId').equals(bingoId).toArray()

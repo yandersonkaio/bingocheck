@@ -153,7 +153,13 @@
       "savingStatus": "Saving...",
       "finishBingo": "Finish bingo",
       "reopenBingo": "Reopen bingo",
-      "finishedMessage": "This bingo has been finished. Rounds and called numbers remain available for review."
+      "finishedMessage": "This bingo has been finished. Rounds and called numbers remain available for review.",
+      "manageCards": "Manage cards",
+      "manageCardsDescription": "Select the cards you want to link to this bingo.",
+      "noAvailableCards": "You haven't created any cards yet.",
+      "createCard": "Create card",
+      "saveCards": "Save changes",
+      "manageCardsError": "Could not update the cards. Please try again."
     },
     "rounds": {
       "roundNumber": "Round {{number}}",

@@ -153,7 +153,13 @@
       "savingStatus": "Salvataggio...",
       "finishBingo": "Termina bingo",
       "reopenBingo": "Riapri bingo",
-      "finishedMessage": "Questo bingo è terminato. I turni e i numeri estratti rimangono disponibili per la consultazione."
+      "finishedMessage": "Questo bingo è terminato. I turni e i numeri estratti rimangono disponibili per la consultazione.",
+      "manageCards": "Gestisci cartelle",
+      "manageCardsDescription": "Seleziona le cartelle da associare a questo bingo.",
+      "noAvailableCards": "Non hai ancora creato nessuna cartella.",
+      "createCard": "Crea cartella",
+      "saveCards": "Salva modifiche",
+      "manageCardsError": "Impossibile aggiornare le cartelle. Riprova."
     },
     "rounds": {
       "roundNumber": "Turno {{number}}",

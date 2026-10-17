@@ -45,6 +45,42 @@ export async function createBingo({
   return bingo.id
 }
 
+export async function updateBingoCards(
+  bingoId: string,
+  cardIds: string[],
+): Promise<void> {
+  const uniqueCardIds = [...new Set(cardIds)]
+
+  await db.transaction('rw', db.bingos, db.rounds, db.cards, async () => {
+    const bingo = await db.bingos.get(bingoId)
+
+    if (!bingo) {
+      throw new Error('Bingo not found')
+    }
+
+    if (bingo.status === 'finished') {
+      throw new Error('Cannot edit cards in a finished bingo')
+    }
+
+    const rounds = await db.rounds.where('bingoId').equals(bingoId).toArray()
+
+    if (rounds.some((round) => round.status === 'in_progress')) {
+      throw new Error('Cannot edit cards while a round is in progress')
+    }
+
+    const existingCards = await db.cards.bulkGet(uniqueCardIds)
+
+    if (existingCards.some((card) => card === undefined)) {
+      throw new Error('One or more cards do not exist')
+    }
+
+    await db.bingos.update(bingoId, {
+      cardIds: uniqueCardIds,
+      updatedAt: new Date(),
+    })
+  })
+}
+
 export async function finishBingo(bingoId: string): Promise<void> {
   await db.transaction('rw', db.bingos, db.rounds, async () => {
     const bingo = await db.bingos.get(bingoId)
