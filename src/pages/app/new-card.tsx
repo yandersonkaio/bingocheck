@@ -1,7 +1,7 @@
 import { ArrowLeft, Plus, RotateCcw, Save, Star } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 
 import { NumberPicker } from '@/components/bingo/number-picker'
 import { type BingoCard } from '@/lib/database'
@@ -19,8 +19,16 @@ interface NewCardProps {
 export function NewCard({ initialCard }: NewCardProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const isEditing = initialCard !== undefined
+
+  const returnTo =
+    isEditing &&
+    typeof location.state?.returnTo === 'string' &&
+    /^\/bingos\/[^/]+$/.test(location.state.returnTo)
+      ? location.state.returnTo
+      : '/cards'
 
   const [cardName, setCardName] = useState(initialCard?.name ?? '')
   const [numbers, setNumbers] = useState<(number | null)[]>(() =>
@@ -106,7 +114,7 @@ export function NewCard({ initialCard }: NewCardProps) {
         await createCard(cardName, numbers)
       }
 
-      navigate('/cards')
+      navigate(returnTo)
     } catch (error) {
       console.error('Failed to save bingo card:', error)
       setSaveError(t('cards.new.saveError'))
@@ -119,7 +127,7 @@ export function NewCard({ initialCard }: NewCardProps) {
     <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
       <div className="flex items-center gap-3">
         <Link
-          to="/cards"
+          to={returnTo}
           className="text-muted-foreground hover:text-foreground flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors"
           aria-label={t('cards.new.back')}
         >
@@ -256,7 +264,7 @@ export function NewCard({ initialCard }: NewCardProps) {
 
         <div className="flex gap-3">
           <Link
-            to="/cards"
+            to={returnTo}
             className="border-border hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium transition-colors"
           >
             {t('cards.new.cancel')}

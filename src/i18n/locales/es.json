@@ -1,3 +1,4 @@
+
 {
   "app": {
     "tagline": "Tu bingo bajo control"
@@ -18,6 +19,17 @@
       "title": "Acceso rápido",
       "myCards": "Mis cartones",
       "bingoHistory": "Historial de partidas"
+    },
+    "activeRound": {
+      "title": "Ronda en curso"
+    },
+    "recentBingos": {
+      "title": "Bingos recientes",
+      "viewAll": "Ver todos"
+    },
+    "actions": {
+      "newCard": "Nuevo cartón",
+      "newBingo": "Nuevo bingo"
     }
   },
   "navigation": {
@@ -86,6 +98,120 @@
       "title": "No hay bingos registrados",
       "description": "Crea tu primer bingo para organizar tus cartones y seguir los números sorteados en cada ronda.",
       "createBingo": "Crear mi primer bingo"
+    },
+    "new": {
+      "back": "Volver a los bingos",
+      "title": "Nuevo bingo",
+      "description": "Configura tu bingo y elige los cartones participantes.",
+      "name": "Nombre del bingo",
+      "namePlaceholder": "Ej.: Bingo del domingo",
+      "nameRequired": "Introduce el nombre del bingo.",
+      "date": "Fecha del bingo (opcional)",
+      "cards": "Cartones participantes",
+      "cardsDescription": "Selecciona los cartones que deseas utilizar. También puedes añadirlos después.",
+      "loadingCards": "Cargando cartones...",
+      "noCards": "Todavía no tienes cartones guardados.",
+      "createCard": "Crear un cartón",
+      "clearSelection": "Limpiar selección",
+      "cancel": "Cancelar",
+      "save": "Crear bingo",
+      "saving": "Creando...",
+      "saveError": "No se pudo crear el bingo. Inténtalo de nuevo."
+    },
+    "loading": "Cargando bingos...",
+    "noDate": "Fecha no definida",
+    "cardCount_one": "{{count}} cartón vinculado",
+    "cardCount_other": "{{count}} cartones vinculados",
+    "status": {
+      "not_started": "No iniciado",
+      "in_progress": "En curso",
+      "finished": "Finalizado"
+    },
+    "details": {
+      "back": "Mis bingos",
+      "notFound": "Bingo no encontrado",
+      "cardsTitle": "Cartones participantes",
+      "noCards": "Este bingo todavía no tiene cartones vinculados.",
+      "edit": "Editar bingo",
+      "delete": "Eliminar bingo",
+      "roundsTitle": "Rondas",
+      "roundCount_one": "{{count}} ronda",
+      "roundCount_other": "{{count}} rondas",
+      "newRound": "Nueva ronda",
+      "noRoundsTitle": "No se ha iniciado ninguna ronda",
+      "noRoundsDescription": "Selecciona las reglas para ganar y comienza a registrar los números anunciados.",
+      "startFirstRound": "Iniciar primera ronda",
+      "roundHistory": "Historial de rondas",
+      "resultUnavailable": "Resultado no registrado",
+      "withBingo": "¡Bingo!",
+      "withoutBingo": "Sin bingo",
+      "statusActionError": "No se pudo actualizar el bingo. Inténtalo de nuevo.",
+      "confirmFinishTitle": "¿Finalizar el bingo?",
+      "confirmFinishDescription": "El bingo se cerrará y no podrás iniciar nuevas rondas hasta que lo vuelvas a abrir. Se conservará todo el historial.",
+      "confirmReopenTitle": "¿Reabrir el bingo?",
+      "confirmReopenDescription": "El bingo volverá a estar en curso y podrás iniciar nuevas rondas. Se conservará el historial anterior.",
+      "savingStatus": "Guardando...",
+      "finishBingo": "Finalizar bingo",
+      "reopenBingo": "Reabrir bingo",
+      "finishedMessage": "Este bingo ha finalizado. Las rondas y los números anunciados siguen disponibles para consulta."
+    },
+    "rounds": {
+      "roundNumber": "Ronda {{number}}",
+      "details": {
+        "inProgress": "En curso",
+        "finished": "Finalizada",
+        "drawnCount": "{{count}} de 75 números registrados",
+        "notFound": "Ronda no encontrada",
+        "actionError": "No se pudo actualizar la ronda. Inténtalo de nuevo.",
+        "finishError": "No se pudo finalizar la ronda.",
+        "lastNumber": "Último número anunciado",
+        "undo": "Deshacer el último número",
+        "winnerAlert_one": "¡{{count}} cartón ha completado una combinación ganadora!",
+        "winnerAlert_other": "¡{{count}} cartones han completado una combinación ganadora!",
+        "almostAlert_one": "{{count}} cartón está a un número de ganar",
+        "almostAlert_other": "{{count}} cartones están a un número de ganar",
+        "numbersTitle": "Números anunciados",
+        "hideNumbers": "Ocultar números",
+        "drawHistoryTitle": "Historial de números",
+        "noDrawHistory": "Todavía no se ha anunciado ningún número.",
+        "cardsTitle": "Mis cartones",
+        "winner": "¡Bingo! Combinación ganadora completada",
+        "remaining_one": "Falta {{count}} número",
+        "remaining_other": "Faltan {{count}} números",
+        "almost": "Falta 1",
+        "confirmFinish": "¿Quieres finalizar esta ronda? Los números registrados se conservarán en el historial.",
+        "finish": "Finalizar ronda",
+        "finishedMessage": "Ronda finalizada. El historial está disponible para consulta."
+      },
+      "new": {
+        "title": "Nueva ronda",
+        "rulesTitle": "Reglas para ganar",
+        "rulesDescription": "Selecciona las reglas anunciadas por el organizador. Puedes elegir más de una.",
+        "summary": "Resumen",
+        "selectedCount_one": "{{count}} regla seleccionada",
+        "selectedCount_other": "{{count}} reglas seleccionadas",
+        "noRules": "Selecciona al menos una regla.",
+        "cancel": "Cancelar",
+        "start": "Iniciar ronda"
+      },
+      "rules": {
+        "line": {
+          "title": "Fila",
+          "description": "Completar cualquier fila horizontal."
+        },
+        "column": {
+          "title": "Columna",
+          "description": "Completar cualquier columna vertical."
+        },
+        "diagonal": {
+          "title": "Diagonal",
+          "description": "Completar cualquiera de las dos diagonales."
+        },
+        "full_card": {
+          "title": "Cartón completo",
+          "description": "Completar todos los números del cartón."
+        }
+      }
     }
   },
   "settings": {

@@ -1,11 +1,33 @@
-import { Plus, Ticket } from 'lucide-react'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { CalendarDays, Grid3X3, Plus, Ticket } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
-export function Bingos() {
-  const { t } = useTranslation()
+import { db } from '@/lib/database'
 
-  const bingos: unknown[] = []
+export function Bingos() {
+  const { t, i18n } = useTranslation()
+
+  const bingos = useLiveQuery(
+    () => db.bingos.orderBy('createdAt').reverse().toArray(),
+    [],
+  )
+
+  const isLoading = bingos === undefined
+
+  function formatDate(date: string | null) {
+    if (!date) {
+      return t('bingos.noDate')
+    }
+
+    const [year, month, day] = date.split('-').map(Number)
+
+    return new Intl.DateTimeFormat(i18n.language, {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(year, month - 1, day))
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -29,7 +51,13 @@ export function Bingos() {
         </Link>
       </div>
 
-      {bingos.length === 0 && (
+      {isLoading && (
+        <div className="text-muted-foreground py-10 text-center text-sm">
+          {t('bingos.loading')}
+        </div>
+      )}
+
+      {!isLoading && bingos.length === 0 && (
         <section className="bg-card border-border flex flex-col items-center gap-4 rounded-xl border px-5 py-10 text-center">
           <div className="bg-primary/10 flex size-14 items-center justify-center rounded-full">
             <Ticket className="text-primary size-7" />
@@ -51,6 +79,46 @@ export function Bingos() {
             {t('bingos.empty.createBingo')}
           </Link>
         </section>
+      )}
+
+      {!isLoading && bingos.length > 0 && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {bingos.map((bingo) => (
+            <Link
+              key={bingo.id}
+              to={`/bingos/${bingo.id}`}
+              className="bg-card border-border hover:border-primary/50 flex flex-col gap-4 rounded-xl border p-4 transition-colors"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <h2 className="min-w-0 truncate text-base font-semibold">
+                  {bingo.name}
+                </h2>
+
+                <span className="bg-muted text-muted-foreground shrink-0 rounded-full px-2.5 py-1 text-xs font-medium">
+                  {t(`bingos.status.${bingo.status}`)}
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <CalendarDays className="size-4 shrink-0" />
+
+                  <span>{formatDate(bingo.date)}</span>
+                </div>
+
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <Grid3X3 className="size-4 shrink-0" />
+
+                  <span>
+                    {t('bingos.cardCount', {
+                      count: bingo.cardIds.length,
+                    })}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       )}
     </div>
   )

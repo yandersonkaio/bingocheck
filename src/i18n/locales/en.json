@@ -1,3 +1,4 @@
+
 {
   "app": {
     "tagline": "Your bingo, under control"
@@ -18,6 +19,17 @@
       "title": "Quick access",
       "myCards": "My cards",
       "bingoHistory": "Bingo history"
+    },
+    "activeRound": {
+      "title": "Round in progress"
+    },
+    "recentBingos": {
+      "title": "Recent bingo games",
+      "viewAll": "View all"
+    },
+    "actions": {
+      "newCard": "New card",
+      "newBingo": "New bingo"
     }
   },
   "navigation": {
@@ -86,6 +98,120 @@
       "title": "No bingo games yet",
       "description": "Create your first bingo game to organize your cards and track drawn numbers in each round.",
       "createBingo": "Create my first bingo"
+    },
+    "new": {
+      "back": "Back to bingos",
+      "title": "New bingo",
+      "description": "Set up your bingo and choose participating cards.",
+      "name": "Bingo name",
+      "namePlaceholder": "E.g. Sunday Bingo",
+      "nameRequired": "Enter a bingo name.",
+      "date": "Bingo date (optional)",
+      "cards": "Participating cards",
+      "cardsDescription": "Select the cards you want to use. You can also add them later.",
+      "loadingCards": "Loading cards...",
+      "noCards": "You don't have any saved cards yet.",
+      "createCard": "Create a card",
+      "clearSelection": "Clear selection",
+      "cancel": "Cancel",
+      "save": "Create bingo",
+      "saving": "Creating...",
+      "saveError": "Could not create the bingo. Please try again."
+    },
+    "loading": "Loading bingos...",
+    "noDate": "No date set",
+    "cardCount_one": "{{count}} linked card",
+    "cardCount_other": "{{count}} linked cards",
+    "status": {
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "finished": "Finished"
+    },
+    "details": {
+      "back": "My bingos",
+      "notFound": "Bingo not found",
+      "cardsTitle": "Participating cards",
+      "noCards": "This bingo doesn't have any linked cards yet.",
+      "edit": "Edit bingo",
+      "delete": "Delete bingo",
+      "roundsTitle": "Rounds",
+      "roundCount_one": "{{count}} round",
+      "roundCount_other": "{{count}} rounds",
+      "newRound": "New round",
+      "noRoundsTitle": "No rounds started",
+      "noRoundsDescription": "Choose the winning rules and start tracking the called numbers.",
+      "startFirstRound": "Start first round",
+      "roundHistory": "Round history",
+      "resultUnavailable": "Result not recorded",
+      "withBingo": "Bingo!",
+      "withoutBingo": "No bingo",
+      "statusActionError": "Could not update the bingo. Please try again.",
+      "confirmFinishTitle": "Finish bingo?",
+      "confirmFinishDescription": "This bingo will be closed, and you won't be able to start new rounds until it is reopened. All history will be preserved.",
+      "confirmReopenTitle": "Reopen bingo?",
+      "confirmReopenDescription": "This bingo will return to in-progress status, and you'll be able to start new rounds. Previous history will be preserved.",
+      "savingStatus": "Saving...",
+      "finishBingo": "Finish bingo",
+      "reopenBingo": "Reopen bingo",
+      "finishedMessage": "This bingo has been finished. Rounds and called numbers remain available for review."
+    },
+    "rounds": {
+      "roundNumber": "Round {{number}}",
+      "details": {
+        "inProgress": "In progress",
+        "finished": "Finished",
+        "drawnCount": "{{count}} of 75 numbers recorded",
+        "notFound": "Round not found",
+        "actionError": "Could not update the round. Please try again.",
+        "finishError": "Could not finish the round.",
+        "lastNumber": "Last called number",
+        "undo": "Undo last number",
+        "winnerAlert_one": "{{count}} card has completed a winning pattern!",
+        "winnerAlert_other": "{{count}} cards have completed a winning pattern!",
+        "almostAlert_one": "{{count}} card is one number away from winning",
+        "almostAlert_other": "{{count}} cards are one number away from winning",
+        "numbersTitle": "Called numbers",
+        "hideNumbers": "Hide numbers",
+        "drawHistoryTitle": "Number history",
+        "noDrawHistory": "No numbers have been called yet.",
+        "cardsTitle": "My cards",
+        "winner": "Bingo! Winning pattern completed",
+        "remaining_one": "{{count}} number remaining",
+        "remaining_other": "{{count}} numbers remaining",
+        "almost": "1 to go",
+        "confirmFinish": "Do you want to finish this round? The recorded numbers will be preserved in the history.",
+        "finish": "Finish round",
+        "finishedMessage": "Round finished. History is available for review."
+      },
+      "new": {
+        "title": "New round",
+        "rulesTitle": "Winning rules",
+        "rulesDescription": "Select the rules announced by the organizer. You can choose more than one.",
+        "summary": "Summary",
+        "selectedCount_one": "{{count}} rule selected",
+        "selectedCount_other": "{{count}} rules selected",
+        "noRules": "Select at least one rule.",
+        "cancel": "Cancel",
+        "start": "Start round"
+      },
+      "rules": {
+        "line": {
+          "title": "Row",
+          "description": "Complete any horizontal row."
+        },
+        "column": {
+          "title": "Column",
+          "description": "Complete any vertical column."
+        },
+        "diagonal": {
+          "title": "Diagonal",
+          "description": "Complete either diagonal."
+        },
+        "full_card": {
+          "title": "Full card",
+          "description": "Complete all numbers on the card."
+        }
+      }
     }
   },
   "settings": {
