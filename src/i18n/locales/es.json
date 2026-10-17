@@ -127,6 +127,20 @@
       "in_progress": "En curso",
       "finished": "Finalizado"
     },
+    "edit": {
+      "title": "Editar bingo",
+      "description": "Actualiza el nombre y la fecha del bingo.",
+      "save": "Guardar cambios",
+      "saveError": "No se pudo actualizar el bingo. Inténtalo de nuevo."
+    },
+    "delete": {
+      "title": "¿Eliminar bingo?",
+      "description": "¿Seguro que deseas eliminar \"{{name}}\"? Todas las rondas y los números registrados se eliminarán permanentemente.",
+      "cardsPreserved": "Los cartones guardados no se eliminarán.",
+      "confirm": "Eliminar bingo",
+      "deleting": "Eliminando...",
+      "error": "No se pudo eliminar el bingo. Inténtalo de nuevo."
+    },
     "details": {
       "back": "Mis bingos",
       "notFound": "Bingo no encontrado",

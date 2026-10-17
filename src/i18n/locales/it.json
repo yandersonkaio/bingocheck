@@ -127,6 +127,20 @@
       "in_progress": "In corso",
       "finished": "Terminato"
     },
+    "edit": {
+      "title": "Modifica bingo",
+      "description": "Aggiorna il nome e la data del bingo.",
+      "save": "Salva modifiche",
+      "saveError": "Impossibile aggiornare il bingo. Riprova."
+    },
+    "delete": {
+      "title": "Eliminare il bingo?",
+      "description": "Vuoi davvero eliminare \"{{name}}\"? Tutti i turni e i numeri registrati verranno eliminati definitivamente.",
+      "cardsPreserved": "Le cartelle salvate non verranno eliminate.",
+      "confirm": "Elimina bingo",
+      "deleting": "Eliminazione...",
+      "error": "Impossibile eliminare il bingo. Riprova."
+    },
     "details": {
       "back": "I miei bingo",
       "notFound": "Bingo non trovato",

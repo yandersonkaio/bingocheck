@@ -127,6 +127,20 @@
       "in_progress": "Em andamento",
       "finished": "Finalizado"
     },
+    "edit": {
+      "title": "Editar bingo",
+      "description": "Atualize o nome e a data do bingo.",
+      "save": "Salvar alterações",
+      "saveError": "Não foi possível atualizar o bingo. Tente novamente."
+    },
+    "delete": {
+      "title": "Excluir bingo?",
+      "description": "Tem certeza de que deseja excluir o bingo \"{{name}}\"? Todas as rodadas e os números registrados serão excluídos permanentemente.",
+      "cardsPreserved": "As cartelas cadastradas não serão excluídas.",
+      "confirm": "Excluir bingo",
+      "deleting": "Excluindo...",
+      "error": "Não foi possível excluir o bingo. Tente novamente."
+    },
     "details": {
       "back": "Meus bingos",
       "notFound": "Bingo não encontrado",

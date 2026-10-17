@@ -127,6 +127,20 @@
       "in_progress": "In progress",
       "finished": "Finished"
     },
+    "edit": {
+      "title": "Edit bingo",
+      "description": "Update the bingo name and date.",
+      "save": "Save changes",
+      "saveError": "Could not update the bingo. Please try again."
+    },
+    "delete": {
+      "title": "Delete bingo?",
+      "description": "Are you sure you want to delete \"{{name}}\"? All rounds and recorded numbers will be permanently deleted.",
+      "cardsPreserved": "Your saved cards will not be deleted.",
+      "confirm": "Delete bingo",
+      "deleting": "Deleting...",
+      "error": "Could not delete the bingo. Please try again."
+    },
     "details": {
       "back": "My bingos",
       "notFound": "Bingo not found",

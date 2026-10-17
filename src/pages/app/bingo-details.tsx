@@ -20,10 +20,11 @@ import {
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 
 import { type BingoCard, type BingoRound, db } from '@/lib/database'
 import {
+  deleteBingo,
   finishBingo,
   reopenBingo,
   updateBingoCards,
@@ -32,6 +33,7 @@ import {
 export function BingoDetails() {
   const { id } = useParams()
   const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
 
   const [confirmation, setConfirmation] = useState<'finish' | 'reopen' | null>(
     null,
@@ -42,6 +44,9 @@ export function BingoDetails() {
   const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
   const [cardError, setCardError] = useState<string | null>(null)
   const [isSavingCards, setIsSavingCards] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   const bingo = useLiveQuery(
     () => (id ? db.bingos.get(id).then((result) => result ?? null) : null),
@@ -121,9 +126,31 @@ export function BingoDetails() {
       setIsCardModalOpen(false)
     } catch (error) {
       console.error('Failed to update bingo cards:', error)
-      setCardError(t('bingos.details.manageCardsError'))
+      setCardError(
+        t('bingos.details.manageCardsError', {
+          defaultValue:
+            'Não foi possível atualizar as cartelas. Tente novamente.',
+        }),
+      )
     } finally {
       setIsSavingCards(false)
+    }
+  }
+
+  async function handleDeleteBingo() {
+    if (!id || isDeleting) return
+
+    setIsDeleting(true)
+    setDeleteError(null)
+
+    try {
+      await deleteBingo(id)
+      navigate('/bingos', { replace: true })
+    } catch (error) {
+      console.error('Failed to delete bingo:', error)
+      setDeleteError(t('bingos.delete.error'))
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -228,23 +255,27 @@ export function BingoDetails() {
           {t('bingos.details.back')}
         </span>
 
-        <span
-          className="text-muted-foreground flex size-9 items-center justify-center rounded-lg opacity-50"
-          title={t('bingos.details.edit', {
-            defaultValue: 'Editar bingo',
-          })}
+        <Link
+          to={`/bingos/${bingo.id}/edit`}
+          className="text-muted-foreground hover:text-foreground hover:bg-accent flex size-9 items-center justify-center rounded-lg transition-colors"
+          title={t('bingos.details.edit')}
+          aria-label={t('bingos.details.edit')}
         >
           <Pencil className="size-4" />
-        </span>
+        </Link>
 
-        <span
-          className="text-muted-foreground flex size-9 items-center justify-center rounded-lg opacity-50"
-          title={t('bingos.details.delete', {
-            defaultValue: 'Excluir bingo',
-          })}
+        <button
+          type="button"
+          onClick={() => {
+            setDeleteError(null)
+            setIsDeleteOpen(true)
+          }}
+          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 flex size-9 cursor-pointer items-center justify-center rounded-lg transition-colors"
+          title={t('bingos.details.delete')}
+          aria-label={t('bingos.details.delete')}
         >
           <Trash2 className="size-4" />
-        </span>
+        </button>
       </div>
 
       <section className="bg-card border-border flex flex-col gap-4 rounded-xl border p-5">
@@ -726,6 +757,73 @@ export function BingoDetails() {
                         })}
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+
+      {isDeleteOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 p-4"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget && !isDeleting) {
+                setIsDeleteOpen(false)
+              }
+            }}
+          >
+            <div
+              role="alertdialog"
+              aria-modal="true"
+              aria-labelledby="delete-bingo-title"
+              aria-describedby="delete-bingo-description"
+              className="bg-card border-border flex w-full max-w-md flex-col gap-4 rounded-xl border p-5 shadow-xl"
+            >
+              <div className="flex items-center gap-3">
+                <div className="bg-destructive/10 text-destructive flex size-10 shrink-0 items-center justify-center rounded-lg">
+                  <Trash2 className="size-5" />
+                </div>
+                <h2 id="delete-bingo-title" className="text-lg font-semibold">
+                  {t('bingos.delete.title')}
+                </h2>
+              </div>
+
+              <p
+                id="delete-bingo-description"
+                className="text-muted-foreground text-sm"
+              >
+                {t('bingos.delete.description', { name: bingo.name })}
+              </p>
+              <p className="text-muted-foreground text-sm">
+                {t('bingos.delete.cardsPreserved')}
+              </p>
+
+              {deleteError && (
+                <p role="alert" className="text-destructive text-sm">
+                  {deleteError}
+                </p>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteOpen(false)}
+                  disabled={isDeleting}
+                  className="border-border hover:bg-accent flex-1 cursor-pointer rounded-lg border px-4 py-3 text-sm font-medium disabled:opacity-50"
+                >
+                  {t('bingos.new.cancel')}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteBingo}
+                  disabled={isDeleting}
+                  className="bg-destructive text-destructive-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium disabled:opacity-50"
+                >
+                  {isDeleting
+                    ? t('bingos.delete.deleting')
+                    : t('bingos.delete.confirm')}
+                </button>
               </div>
             </div>
           </div>,

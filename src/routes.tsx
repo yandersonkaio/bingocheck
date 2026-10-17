@@ -5,6 +5,7 @@ import { AuthLayout } from './pages/_layouts/auth'
 import { BingoDetails } from './pages/app/bingo-details'
 import { Bingos } from './pages/app/bingos'
 import { Cards } from './pages/app/cards'
+import { EditBingo } from './pages/app/edit-bingo'
 import { EditCard } from './pages/app/edit-card'
 import { Home } from './pages/app/home'
 import { NewBingo } from './pages/app/new-bingo'
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: 'bingos/:id', element: <BingoDetails /> },
       { path: 'bingos/:id/rounds/new', element: <NewRound /> },
       { path: 'bingos/:id/rounds/:roundId', element: <RoundDetails /> },
+      { path: 'bingos/:id/edit', element: <EditBingo /> },
     ],
   },
   {

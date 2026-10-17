@@ -6,11 +6,12 @@ interface CreateBingoData {
   cardIds?: string[]
 }
 
-export async function createBingo({
-  name,
-  date = null,
-  cardIds = [],
-}: CreateBingoData): Promise<string> {
+interface UpdateBingoData {
+  name: string
+  date: string | null
+}
+
+function validateBingoDetails(name: string, date: string | null) {
   const normalizedName = name.trim()
 
   if (!normalizedName) {
@@ -21,6 +22,15 @@ export async function createBingo({
     throw new Error('Invalid bingo date')
   }
 
+  return normalizedName
+}
+
+export async function createBingo({
+  name,
+  date = null,
+  cardIds = [],
+}: CreateBingoData): Promise<string> {
+  const normalizedName = validateBingoDetails(name, date)
   const uniqueCardIds = [...new Set(cardIds)]
   const existingCards = await db.cards.bulkGet(uniqueCardIds)
 
@@ -29,7 +39,6 @@ export async function createBingo({
   }
 
   const now = new Date()
-
   const bingo: Bingo = {
     id: crypto.randomUUID(),
     name: normalizedName,
@@ -41,8 +50,35 @@ export async function createBingo({
   }
 
   await db.bingos.add(bingo)
-
   return bingo.id
+}
+
+export async function updateBingo(
+  bingoId: string,
+  { name, date }: UpdateBingoData,
+): Promise<void> {
+  const normalizedName = validateBingoDetails(name, date)
+
+  await db.transaction('rw', db.bingos, async () => {
+    const bingo = await db.bingos.get(bingoId)
+    if (!bingo) throw new Error('Bingo not found')
+
+    await db.bingos.update(bingoId, {
+      name: normalizedName,
+      date,
+      updatedAt: new Date(),
+    })
+  })
+}
+
+export async function deleteBingo(bingoId: string): Promise<void> {
+  await db.transaction('rw', db.bingos, db.rounds, async () => {
+    const bingo = await db.bingos.get(bingoId)
+    if (!bingo) throw new Error('Bingo not found')
+
+    await db.rounds.where('bingoId').equals(bingoId).delete()
+    await db.bingos.delete(bingoId)
+  })
 }
 
 export async function updateBingoCards(
