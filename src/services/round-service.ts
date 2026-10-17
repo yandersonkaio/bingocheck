@@ -88,6 +88,37 @@ export async function createRound({
   })
 }
 
+export async function updateRoundRules(
+  roundId: string,
+  rules: RoundRule[],
+): Promise<void> {
+  const uniqueRules = [...new Set(rules)]
+
+  if (
+    uniqueRules.length === 0 ||
+    uniqueRules.some((rule) => !VALID_RULES.includes(rule))
+  ) {
+    throw new Error('Invalid round rules')
+  }
+
+  await db.transaction('rw', db.rounds, db.bingos, async () => {
+    const round = await db.rounds.get(roundId)
+    if (!round || round.status !== 'in_progress') {
+      throw new Error('Round is not in progress')
+    }
+
+    const bingo = await db.bingos.get(round.bingoId)
+    if (!bingo || bingo.status === 'finished') {
+      throw new Error('Bingo is not available')
+    }
+
+    await db.rounds.update(roundId, {
+      rules: uniqueRules,
+      updatedAt: new Date(),
+    })
+  })
+}
+
 export async function registerDrawnNumber(
   roundId: string,
   number: number,

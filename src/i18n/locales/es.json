@@ -203,7 +203,15 @@
         "confirmFinish": "¿Quieres finalizar esta ronda? Los números registrados se conservarán en el historial.",
         "finish": "Finalizar ronda",
         "legacyCardsUnavailable": "Los cartones de esta ronda antigua no se conservaron. Los números sorteados y el resultado registrado siguen disponibles.",
-        "finishedMessage": "Ronda finalizada. El historial está disponible para consulta."
+        "finishedMessage": "Ronda finalizada. El historial está disponible para consulta.",
+        "rulesTitle": "Reglas de victoria",
+        "editRules": "Editar",
+        "editRulesDescription": "Modifica las reglas de esta ronda. Los números sorteados se conservarán.",
+        "rulesRequired": "Selecciona al menos una regla.",
+        "rulesSaveError": "No se pudieron actualizar las reglas. Inténtalo de nuevo.",
+        "cancelRules": "Cancelar",
+        "saveRules": "Guardar cambios",
+        "savingRules": "Guardando..."
       },
       "new": {
         "title": "Nueva ronda",

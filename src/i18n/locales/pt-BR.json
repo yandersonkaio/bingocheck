@@ -203,7 +203,15 @@
         "confirmFinish": "Deseja finalizar esta rodada? Os números registrados serão preservados no histórico.",
         "finish": "Finalizar rodada",
         "legacyCardsUnavailable": "As cartelas desta rodada antiga não foram preservadas. Os números sorteados e o resultado registrado continuam disponíveis.",
-        "finishedMessage": "Rodada finalizada. Histórico disponível para consulta."
+        "finishedMessage": "Rodada finalizada. Histórico disponível para consulta.",
+        "rulesTitle": "Regras de vitória",
+        "editRules": "Editar",
+        "editRulesDescription": "Altere as regras desta rodada. Os números já sorteados serão preservados.",
+        "rulesRequired": "Selecione pelo menos uma regra.",
+        "rulesSaveError": "Não foi possível atualizar as regras. Tente novamente.",
+        "cancelRules": "Cancelar",
+        "saveRules": "Salvar alterações",
+        "savingRules": "Salvando..."
       },
       "new": {
         "title": "Nova rodada",

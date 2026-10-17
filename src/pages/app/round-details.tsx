@@ -7,7 +7,9 @@ import {
   ChevronUp,
   CircleAlert,
   Flag,
+  Pencil,
   RotateCcw,
+  Save,
   Ticket,
   Trophy,
 } from 'lucide-react'
@@ -20,7 +22,10 @@ import {
   finishRound,
   registerDrawnNumber,
   undoLastDrawnNumber,
+  updateRoundRules,
 } from '@/services/round-service'
+
+const availableRules: RoundRule[] = ['line', 'column', 'diagonal', 'full_card']
 
 const columns = ['B', 'I', 'N', 'G', 'O'] as const
 
@@ -93,6 +98,9 @@ export function RoundDetails() {
   const [showFinishConfirmation, setShowFinishConfirmation] = useState(false)
   const [expandedCards, setExpandedCards] = useState<string[]>([])
   const [activeLetter, setActiveLetter] = useState<BingoLetter | null>(null)
+  const [editingRules, setEditingRules] = useState(false)
+  const [selectedRules, setSelectedRules] = useState<RoundRule[]>([])
+  const [rulesError, setRulesError] = useState<string | null>(null)
 
   const bingo = useLiveQuery(
     () => (id ? db.bingos.get(id).then((result) => result ?? null) : null),
@@ -149,6 +157,44 @@ export function RoundDetails() {
 
   function toggleLetter(letter: BingoLetter) {
     setActiveLetter((previous) => (previous === letter ? null : letter))
+  }
+
+  function startEditingRules() {
+    if (!round || round.status !== 'in_progress' || isSaving) return
+    setSelectedRules([...round.rules])
+    setRulesError(null)
+    setEditingRules(true)
+  }
+
+  function toggleRule(rule: RoundRule) {
+    setSelectedRules((previous) =>
+      previous.includes(rule)
+        ? previous.filter((item) => item !== rule)
+        : [...previous, rule],
+    )
+    setRulesError(null)
+  }
+
+  async function handleSaveRules() {
+    if (!round || isFinished || isSaving) return
+
+    if (selectedRules.length === 0) {
+      setRulesError(t('bingos.rounds.details.rulesRequired'))
+      return
+    }
+
+    setIsSaving(true)
+    setRulesError(null)
+
+    try {
+      await updateRoundRules(round.id, selectedRules)
+      setEditingRules(false)
+    } catch (error) {
+      console.error('Failed to update round rules:', error)
+      setRulesError(t('bingos.rounds.details.rulesSaveError'))
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   async function handleRegisterNumber(number: number) {
@@ -286,16 +332,107 @@ export function RoundDetails() {
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {round.rules.map((rule) => (
-          <span
-            key={rule}
-            className="bg-muted rounded-full px-3 py-1 text-xs font-medium"
-          >
-            {t(`bingos.rounds.rules.${rule}.title`)}
-          </span>
-        ))}
-      </div>
+      <section className="flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold">
+            {t('bingos.rounds.details.rulesTitle')}
+          </h2>
+
+          {!isFinished && !editingRules && (
+            <button
+              type="button"
+              onClick={startEditingRules}
+              disabled={isSaving}
+              className="text-primary hover:bg-primary/10 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium disabled:opacity-50"
+            >
+              <Pencil className="size-4" />
+              {t('bingos.rounds.details.editRules')}
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {round.rules.map((rule) => (
+            <span
+              key={rule}
+              className="bg-muted rounded-full px-3 py-1 text-xs font-medium"
+            >
+              {t(`bingos.rounds.rules.${rule}.title`)}
+            </span>
+          ))}
+        </div>
+
+        {editingRules && !isFinished && (
+          <div className="bg-card border-border flex flex-col gap-4 rounded-xl border p-4">
+            <p className="text-muted-foreground text-sm">
+              {t('bingos.rounds.details.editRulesDescription')}
+            </p>
+
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {availableRules.map((rule) => {
+                const selected = selectedRules.includes(rule)
+
+                return (
+                  <button
+                    key={rule}
+                    type="button"
+                    onClick={() => toggleRule(rule)}
+                    disabled={isSaving}
+                    aria-pressed={selected}
+                    className={`flex items-center gap-3 rounded-lg border p-3 text-left text-sm font-medium transition-colors disabled:opacity-50 ${
+                      selected
+                        ? 'border-primary bg-primary/5'
+                        : 'border-border hover:border-primary/50'
+                    }`}
+                  >
+                    <span
+                      className={`flex size-5 shrink-0 items-center justify-center rounded border ${
+                        selected
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border'
+                      }`}
+                    >
+                      {selected && <Check className="size-3.5" />}
+                    </span>
+                    {t(`bingos.rounds.rules.${rule}.title`)}
+                  </button>
+                )
+              })}
+            </div>
+
+            {rulesError && (
+              <p role="alert" className="text-destructive text-sm">
+                {rulesError}
+              </p>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingRules(false)
+                  setRulesError(null)
+                }}
+                disabled={isSaving}
+                className="border-border hover:bg-accent flex flex-1 items-center justify-center rounded-lg border px-4 py-2.5 text-sm font-medium disabled:opacity-50"
+              >
+                {t('bingos.rounds.details.cancelRules')}
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveRules}
+                disabled={isSaving || selectedRules.length === 0}
+                className="bg-primary text-primary-foreground flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium disabled:opacity-50"
+              >
+                <Save className="size-4" />
+                {isSaving
+                  ? t('bingos.rounds.details.savingRules')
+                  : t('bingos.rounds.details.saveRules')}
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
 
       <section className="bg-card border-border flex flex-col items-center gap-2 rounded-xl border p-5 text-center">
         <p className="text-muted-foreground text-sm">

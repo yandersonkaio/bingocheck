@@ -203,7 +203,15 @@
         "confirmFinish": "Vuoi terminare questo turno? I numeri registrati saranno conservati nella cronologia.",
         "finish": "Termina turno",
         "legacyCardsUnavailable": "Le cartelle di questo turno precedente non sono state conservate. I numeri estratti e il risultato registrato rimangono disponibili.",
-        "finishedMessage": "Turno terminato. La cronologia è disponibile per la consultazione."
+        "finishedMessage": "Turno terminato. La cronologia è disponibile per la consultazione.",
+        "rulesTitle": "Regole di vittoria",
+        "editRules": "Modifica",
+        "editRulesDescription": "Modifica le regole di questo turno. I numeri già estratti verranno conservati.",
+        "rulesRequired": "Seleziona almeno una regola.",
+        "rulesSaveError": "Impossibile aggiornare le regole. Riprova.",
+        "cancelRules": "Annulla",
+        "saveRules": "Salva modifiche",
+        "savingRules": "Salvataggio..."
       },
       "new": {
         "title": "Nuovo turno",
