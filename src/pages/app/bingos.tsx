@@ -8,10 +8,14 @@ import { db } from '@/lib/database'
 export function Bingos() {
   const { t, i18n } = useTranslation()
 
-  const bingos = useLiveQuery(
-    () => db.bingos.orderBy('createdAt').reverse().toArray(),
-    [],
-  )
+  const bingos = useLiveQuery(async () => {
+    const all = await db.bingos.orderBy('createdAt').reverse().toArray()
+
+    return [
+      ...all.filter((b) => b.status === 'in_progress'),
+      ...all.filter((b) => b.status !== 'in_progress'),
+    ]
+  }, [])
 
   const existingCardIds = useLiveQuery(async () => {
     const cards = await db.cards.toArray()
