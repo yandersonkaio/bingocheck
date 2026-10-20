@@ -128,9 +128,7 @@ export function LanguageSelector() {
         >
           <div className="border-border text-muted-foreground flex items-center gap-1.5 border-b px-3 py-2 text-[10px] font-semibold tracking-wider uppercase">
             <span className="bg-primary size-1.5 rounded-full" />
-            {t('settings.currentLanguage', {
-              defaultValue: 'Idioma atual',
-            })}
+            {t('settings.currentLanguage')}
           </div>
 
           <div className="p-1.5">

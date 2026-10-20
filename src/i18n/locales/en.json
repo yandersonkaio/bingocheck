@@ -241,6 +241,7 @@
   },
   "settings": {
     "language": "Language",
+    "currentLanguage": "Current language",
     "theme": "Theme",
     "changeTheme": "Change theme",
     "appearance": "Appearance",
