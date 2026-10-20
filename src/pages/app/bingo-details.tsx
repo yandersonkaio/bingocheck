@@ -15,13 +15,26 @@ import {
   Ticket,
   Trash2,
   Trophy,
-  X,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { type BingoCard, type BingoRound, db } from '@/lib/database'
 import {
   deleteBingo,
@@ -41,6 +54,11 @@ export function BingoDetails() {
   const [isSaving, setIsSaving] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
   const [isCardModalOpen, setIsCardModalOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(min-width: 768px)').matches,
+  )
   const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
   const [cardError, setCardError] = useState<string | null>(null)
   const [isSavingCards, setIsSavingCards] = useState(false)
@@ -62,17 +80,17 @@ export function BingoDetails() {
   const allCards = useLiveQuery(() => db.cards.toArray(), [])
 
   useEffect(() => {
-    if (!isCardModalOpen) return
+    const mediaQuery = window.matchMedia('(min-width: 768px)')
 
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape' && !isSavingCards) {
-        setIsCardModalOpen(false)
-      }
+    function handleChange(event: MediaQueryListEvent) {
+      setIsDesktop(event.matches)
     }
 
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [isCardModalOpen, isSavingCards])
+    setIsDesktop(mediaQuery.matches)
+    mediaQuery.addEventListener('change', handleChange)
+
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   const rounds = useLiveQuery(async (): Promise<BingoRound[]> => {
     if (!id) return []
@@ -197,25 +215,60 @@ export function BingoDetails() {
 
   if (bingo === undefined || rounds === undefined) {
     return (
-      <div className="text-muted-foreground py-10 text-center text-sm">
-        {t('bingos.loading')}
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+        <div className="bg-card border-border relative h-24 overflow-hidden rounded-xl border">
+          <div
+            aria-hidden
+            className="bg-primary/10 pointer-events-none absolute -top-10 -right-10 size-24 rounded-full blur-2xl"
+          />
+
+          <div className="relative flex h-full flex-col justify-center gap-2 px-5">
+            <div className="bg-muted h-5 w-48 animate-pulse rounded" />
+            <div className="bg-muted h-3 w-32 animate-pulse rounded" />
+            <div className="bg-muted h-3 w-24 animate-pulse rounded" />
+          </div>
+        </div>
+
+        <div className="text-muted-foreground py-10 text-center text-sm">
+          {t('bingos.loading')}
+        </div>
       </div>
     )
   }
 
   if (bingo === null) {
     return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 py-10 text-center">
-        <h1 className="text-xl font-semibold">
-          {t('bingos.details.notFound')}
-        </h1>
-
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-7">
         <Link
           to="/bingos"
-          className="text-primary text-sm font-medium hover:underline"
+          className="text-muted-foreground hover:bg-accent hover:text-foreground inline-flex w-fit items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors"
         >
+          <ArrowLeft className="size-4" />
           {t('bingos.details.back')}
         </Link>
+
+        <section className="bg-card border-border relative flex flex-col items-center gap-5 overflow-hidden rounded-xl border px-5 py-12 text-center">
+          <div
+            aria-hidden
+            className="bg-primary/20 pointer-events-none absolute -top-16 left-1/2 size-40 -translate-x-1/2 rounded-full blur-3xl"
+          />
+
+          <div className="bg-primary/10 ring-primary/20 relative flex size-16 items-center justify-center rounded-full ring-4">
+            <Ticket className="text-primary size-7" />
+          </div>
+
+          <h1 className="relative text-lg font-semibold">
+            {t('bingos.details.notFound')}
+          </h1>
+
+          <Link
+            to="/bingos"
+            className="bg-primary text-primary-foreground relative inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium shadow-sm transition-opacity hover:opacity-90"
+          >
+            <ArrowLeft className="size-4" />
+            {t('bingos.details.back')}
+          </Link>
+        </section>
       </div>
     )
   }
@@ -234,6 +287,95 @@ export function BingoDetails() {
 
   const canFinishBingo =
     !isBingoFinished && !activeRound && finishedRounds.length > 0
+
+  const manageCardsContent = (
+    <>
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-5">
+        {allCards === undefined ? (
+          <p className="text-muted-foreground py-6 text-center text-sm">
+            {t('bingos.new.loadingCards')}
+          </p>
+        ) : allCards.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-6 text-center">
+            <Ticket className="text-muted-foreground size-8" />
+            <p className="text-muted-foreground text-sm">
+              {t('bingos.details.noAvailableCards')}
+            </p>
+            <Link
+              to="/cards/new"
+              onClick={() => setIsCardModalOpen(false)}
+              className="text-primary text-sm font-medium hover:underline"
+            >
+              {t('bingos.details.createCard')}
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {allCards.map((card) => {
+              const selected = selectedCardIds.includes(card.id)
+
+              return (
+                <label
+                  key={card.id}
+                  className={`border-border flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
+                    selected
+                      ? 'border-primary bg-primary/5'
+                      : 'hover:bg-muted/50'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selected}
+                    onChange={() => toggleSelectedCard(card.id)}
+                    disabled={isSavingCards}
+                    className="accent-primary size-4 shrink-0 cursor-pointer"
+                  />
+                  <Grid3X3 className="text-muted-foreground size-5 shrink-0" />
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                    {card.name}
+                  </span>
+                  {selected && (
+                    <Check className="text-primary size-4 shrink-0" />
+                  )}
+                </label>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="bg-card border-border flex shrink-0 flex-col gap-3 border-t px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
+        <p className="text-muted-foreground text-xs">
+          {t('bingos.cardCount', { count: selectedCardIds.length })}
+        </p>
+        {cardError && (
+          <p role="alert" className="text-destructive text-sm">
+            {cardError}
+          </p>
+        )}
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => setIsCardModalOpen(false)}
+            disabled={isSavingCards}
+            className="border-border bg-card hover:bg-accent flex-1 cursor-pointer rounded-lg border px-4 py-3 text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {t('bingos.rounds.new.cancel')}
+          </button>
+          <button
+            type="button"
+            onClick={handleSaveCards}
+            disabled={isSavingCards || allCards === undefined}
+            className="bg-primary text-primary-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium shadow-sm disabled:opacity-50"
+          >
+            {isSavingCards
+              ? t('bingos.details.savingStatus')
+              : t('bingos.details.saveCards')}
+          </button>
+        </div>
+      </div>
+    </>
+  )
 
   function openConfirmation(action: 'finish' | 'reopen') {
     setActionError(null)
@@ -645,149 +787,43 @@ export function BingoDetails() {
         )}
       </section>
 
-      {isCardModalOpen &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 sm:items-center sm:p-4"
-            onMouseDown={(event) => {
-              if (event.target === event.currentTarget && !isSavingCards) {
-                setIsCardModalOpen(false)
-              }
-            }}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="manage-cards-title"
-              className="bg-card border-border flex h-[85dvh] min-h-0 w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border shadow-xl sm:h-auto sm:max-h-[85dvh] sm:rounded-xl"
-            >
-              <div className="border-border shrink-0 border-b px-4 pt-2 pb-4 sm:p-4">
-                <div className="bg-muted-foreground/30 mx-auto mb-3 h-1.5 w-10 rounded-full sm:hidden" />
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h2
-                      id="manage-cards-title"
-                      className="text-lg font-semibold"
-                    >
-                      {t('bingos.details.manageCards', {
-                        defaultValue: 'Gerenciar cartelas',
-                      })}
-                    </h2>
-                    <p className="text-muted-foreground mt-1 text-sm">
-                      {t('bingos.details.manageCardsDescription', {
-                        defaultValue:
-                          'Selecione as cartelas que deseja vincular a este bingo.',
-                      })}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsCardModalOpen(false)}
-                    disabled={isSavingCards}
-                    aria-label={t('bingos.rounds.new.cancel')}
-                    className="text-muted-foreground hover:bg-accent hover:text-foreground hidden cursor-pointer rounded-lg p-1 disabled:opacity-50 sm:inline-flex"
-                  >
-                    <X className="size-5" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
-                {allCards === undefined ? (
-                  <p className="text-muted-foreground py-6 text-center text-sm">
-                    {t('bingos.new.loadingCards')}
-                  </p>
-                ) : allCards.length === 0 ? (
-                  <div className="flex flex-col items-center gap-3 py-6 text-center">
-                    <Ticket className="text-muted-foreground size-8" />
-                    <p className="text-muted-foreground text-sm">
-                      {t('bingos.details.noAvailableCards', {
-                        defaultValue:
-                          'Você ainda não cadastrou nenhuma cartela.',
-                      })}
-                    </p>
-                    <Link
-                      to="/cards/new"
-                      className="text-primary text-sm font-medium hover:underline"
-                    >
-                      {t('bingos.details.createCard', {
-                        defaultValue: 'Cadastrar cartela',
-                      })}
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    {allCards.map((card) => {
-                      const selected = selectedCardIds.includes(card.id)
-
-                      return (
-                        <label
-                          key={card.id}
-                          className={`border-border flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${
-                            selected
-                              ? 'border-primary bg-primary/5'
-                              : 'hover:bg-muted/50'
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={selected}
-                            onChange={() => toggleSelectedCard(card.id)}
-                            disabled={isSavingCards}
-                            className="accent-primary size-4 shrink-0 cursor-pointer"
-                          />
-                          <Grid3X3 className="text-muted-foreground size-5 shrink-0" />
-                          <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                            {card.name}
-                          </span>
-                          {selected && (
-                            <Check className="text-primary size-4 shrink-0" />
-                          )}
-                        </label>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div className="bg-card border-border flex shrink-0 flex-col gap-3 border-t px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4">
-                <p className="text-muted-foreground text-xs">
-                  {t('bingos.cardCount', { count: selectedCardIds.length })}
-                </p>
-                {cardError && (
-                  <p role="alert" className="text-destructive text-sm">
-                    {cardError}
-                  </p>
-                )}
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setIsCardModalOpen(false)}
-                    disabled={isSavingCards}
-                    className="border-border hover:bg-accent flex-1 cursor-pointer rounded-lg border px-4 py-3 text-sm font-medium disabled:opacity-50"
-                  >
-                    {t('bingos.rounds.new.cancel')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSaveCards}
-                    disabled={isSavingCards || allCards === undefined}
-                    className="bg-primary text-primary-foreground flex-1 cursor-pointer rounded-lg px-4 py-3 text-sm font-medium shadow-sm disabled:opacity-50"
-                  >
-                    {isSavingCards
-                      ? t('bingos.details.savingStatus', {
-                          defaultValue: 'Salvando...',
-                        })
-                      : t('bingos.details.saveCards', {
-                          defaultValue: 'Salvar alterações',
-                        })}
-                  </button>
-                </div>
-              </div>
+      {isDesktop ? (
+        <Dialog
+          open={isCardModalOpen}
+          onOpenChange={(open) => {
+            if (!isSavingCards) setIsCardModalOpen(open)
+          }}
+        >
+          <DialogContent className="flex max-h-[85dvh] min-h-0 flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
+            <DialogHeader className="shrink-0 px-5 pt-5 pb-4 text-left">
+              <DialogTitle>{t('bingos.details.manageCards')}</DialogTitle>
+              <DialogDescription>
+                {t('bingos.details.manageCardsDescription')}
+              </DialogDescription>
+            </DialogHeader>
+            {manageCardsContent}
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Drawer
+          open={isCardModalOpen}
+          onOpenChange={(open) => {
+            if (!isSavingCards) setIsCardModalOpen(open)
+          }}
+        >
+          <DrawerContent>
+            <div className="mx-auto flex max-h-[85dvh] w-full max-w-lg flex-col">
+              <DrawerHeader className="shrink-0 px-4 pb-4 text-left">
+                <DrawerTitle>{t('bingos.details.manageCards')}</DrawerTitle>
+                <DrawerDescription>
+                  {t('bingos.details.manageCardsDescription')}
+                </DrawerDescription>
+              </DrawerHeader>
+              {manageCardsContent}
             </div>
-          </div>,
-          document.body,
-        )}
+          </DrawerContent>
+        </Drawer>
+      )}
 
       {isDeleteOpen &&
         createPortal(
