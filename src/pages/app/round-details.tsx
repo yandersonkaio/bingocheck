@@ -17,6 +17,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 
+import { BingoStatusBadge } from '@/components/bingo/bingo-status-badge'
 import { type BingoCard, db, type RoundRule } from '@/lib/database'
 import {
   finishRound,
@@ -352,27 +353,7 @@ export function RoundDetails() {
           <p className="text-muted-foreground truncate text-sm">{bingo.name}</p>
         </div>
 
-        <span
-          className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-            isFinished
-              ? 'bg-muted text-muted-foreground'
-              : 'bg-primary/10 text-primary'
-          }`}
-        >
-          <span
-            className={`size-1.5 rounded-full ${
-              isFinished ? 'bg-muted-foreground/60' : 'bg-primary animate-pulse'
-            }`}
-          />
-
-          {isFinished
-            ? t('bingos.rounds.details.finished', {
-                defaultValue: 'Finalizada',
-              })
-            : t('bingos.rounds.details.inProgress', {
-                defaultValue: 'Em andamento',
-              })}
-        </span>
+        <BingoStatusBadge status={round.status} />
       </div>
 
       <section className="flex flex-col gap-3">

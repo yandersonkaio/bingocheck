@@ -21,6 +21,7 @@ import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 
+import { BingoStatusBadge } from '@/components/bingo/bingo-status-badge'
 import {
   Dialog,
   DialogContent,
@@ -448,27 +449,7 @@ export function BingoDetails() {
             </div>
           </div>
 
-          <span
-            className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
-              isBingoFinished
-                ? 'bg-muted text-muted-foreground'
-                : bingo.status === 'in_progress'
-                  ? 'bg-primary/10 text-primary'
-                  : 'bg-muted text-muted-foreground'
-            }`}
-          >
-            <span
-              className={`size-1.5 rounded-full ${
-                isBingoFinished
-                  ? 'bg-muted-foreground/60'
-                  : bingo.status === 'in_progress'
-                    ? 'bg-primary'
-                    : 'bg-muted-foreground/60'
-              }`}
-            />
-
-            {t(`bingos.status.${bingo.status}`)}
-          </span>
+          <BingoStatusBadge status={bingo.status} />
         </div>
       </section>
 

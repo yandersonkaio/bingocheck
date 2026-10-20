@@ -3,6 +3,7 @@ import { CalendarDays, ChevronRight, Grid3X3, Plus, Ticket } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
+import { BingoStatusBadge } from '@/components/bingo/bingo-status-badge'
 import { db } from '@/lib/database'
 
 export function Bingos() {
@@ -118,23 +119,7 @@ export function Bingos() {
                     {bingo.name}
                   </h2>
 
-                  <span
-                    className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
-                      bingo.status === 'in_progress'
-                        ? 'bg-primary/10 text-primary'
-                        : 'bg-muted text-muted-foreground'
-                    }`}
-                  >
-                    <span
-                      className={`size-1.5 rounded-full ${
-                        bingo.status === 'in_progress'
-                          ? 'bg-primary'
-                          : 'bg-muted-foreground/60'
-                      }`}
-                    />
-
-                    {t(`bingos.status.${bingo.status}`)}
-                  </span>
+                  <BingoStatusBadge status={bingo.status} />
                 </div>
 
                 <div className="relative flex flex-col gap-3">

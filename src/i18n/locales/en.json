@@ -11,12 +11,29 @@
     "bingos": "Bingo games",
     "inProgress": "In progress",
     "empty": {
-      "title": "No bingo games in progress",
-      "description": "Create a bingo game to start tracking drawn numbers and your cards.",
+      "title": "Your bingo starts here!",
+      "description": "Add your first card to start tracking drawn numbers.",
+      "createCard": "Add your first card",
+      "nextStep": "Then create a bingo game and link your cards."
+    },
+    "ready": {
+      "title": "Ready for your next bingo game!",
+      "description_one": "You already have {{count}} saved card. Create a bingo game to start tracking draws.",
+      "description_other": "You already have {{count}} saved cards. Create a bingo game to start tracking draws.",
       "createBingo": "Create bingo game"
     },
+    "waiting": {
+      "title": "Next step",
+      "description_one": "{{count}} linked card. You can now start a round.",
+      "description_other": "{{count}} linked cards. You can now start a round.",
+      "startRound": "Start round"
+    },
     "activeRound": {
-      "title": "Round in progress"
+      "title": "Pick up where you left off",
+      "drawnNumbers": "Drawn numbers",
+      "linkedCards": "My cards",
+      "lastNumber": "Last number",
+      "continue": "Continue round"
     },
     "recentBingos": {
       "title": "Recent bingo games",

@@ -11,12 +11,29 @@
     "bingos": "Partidas",
     "inProgress": "En curso",
     "empty": {
-      "title": "No hay partidas de bingo en curso",
-      "description": "Crea una partida de bingo para empezar a seguir los números sorteados y tus cartones.",
+      "title": "¡Tu bingo comienza aquí!",
+      "description": "Registra tu primer cartón para comenzar a seguir los números sorteados.",
+      "createCard": "Registrar primer cartón",
+      "nextStep": "Después, crea una partida de bingo y vincula tus cartones."
+    },
+    "ready": {
+      "title": "¡Todo listo para la próxima partida de bingo!",
+      "description_one": "Ya tienes {{count}} cartón registrado. Crea una partida de bingo para seguir los sorteos.",
+      "description_other": "Ya tienes {{count}} cartones registrados. Crea una partida de bingo para seguir los sorteos.",
       "createBingo": "Crear partida"
     },
+    "waiting": {
+      "title": "Siguiente paso",
+      "description_one": "{{count}} cartón vinculado. Ya puedes iniciar una ronda.",
+      "description_other": "{{count}} cartones vinculados. Ya puedes iniciar una ronda.",
+      "startRound": "Iniciar ronda"
+    },
     "activeRound": {
-      "title": "Ronda en curso"
+      "title": "Continúa donde lo dejaste",
+      "drawnNumbers": "Números sorteados",
+      "linkedCards": "Mis cartones",
+      "lastNumber": "Último número",
+      "continue": "Continuar ronda"
     },
     "recentBingos": {
       "title": "Bingos recientes",

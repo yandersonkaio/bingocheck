@@ -42,6 +42,12 @@
 
   --color-bingo-win: var(--bingo-win);
   --color-bingo-win-foreground: var(--bingo-win-foreground);
+
+  --color-status-active: var(--status-active);
+  --color-status-active-foreground: var(--status-active-foreground);
+
+  --color-status-finished: var(--status-finished);
+  --color-status-finished-foreground: var(--status-finished-foreground);
 }
 
 /* ========================================
@@ -85,6 +91,12 @@
 
   --bingo-win: #15803d;
   --bingo-win-foreground: #ffffff;
+
+  --status-active: #dcfce7;
+  --status-active-foreground: #166534;
+
+  --status-finished: #dbeafe;
+  --status-finished-foreground: #1d4ed8;
 }
 
 /* ========================================
@@ -126,6 +138,12 @@
 
   --bingo-win: #22c55e;
   --bingo-win-foreground: #052e16;
+
+  --status-active: #14532d;
+  --status-active-foreground: #bbf7d0;
+
+  --status-finished: #1e3a5f;
+  --status-finished-foreground: #93c5fd;
 }
 
 /* ========================================
@@ -167,6 +185,12 @@
 
   --bingo-win: #d6a34f;
   --bingo-win-foreground: #2a1c10;
+
+  --status-active: #6b4d33;
+  --status-active-foreground: #ffe0a3;
+
+  --status-finished: #594838;
+  --status-finished-foreground: #f2c78a;
 }
 
 /* ========================================
@@ -208,6 +232,12 @@
 
   --bingo-win: #86efac;
   --bingo-win-foreground: #101c18;
+
+  --status-active: #294d3e;
+  --status-active-foreground: #b4e0c2;
+
+  --status-finished: #29463f;
+  --status-finished-foreground: #a5d6c0; 
 }
 
 /* ========================================
@@ -249,6 +279,12 @@
 
   --bingo-win: #a84d75;
   --bingo-win-foreground: #ffffff;
+
+  --status-active: #f9e0e9;
+  --status-active-foreground: #963c64;
+
+  --status-finished: #f3dce9;
+  --status-finished-foreground: #9d4b78;
 }
 
 /* ========================================
