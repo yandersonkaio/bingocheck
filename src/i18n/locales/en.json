@@ -3,6 +3,9 @@
   "app": {
     "tagline": "Your bingo, under control"
   },
+  "common": {
+    "developedBy": "Developed by"
+  },
   "home": {
     "title": "Home",
     "description": "Keep track of your bingo cards and games",

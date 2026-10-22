@@ -3,6 +3,9 @@
   "app": {
     "tagline": "Il tuo bingo sotto controllo"
   },
+  "common": {
+    "developedBy": "Sviluppato da"
+  },
   "home": {
     "title": "Home",
     "description": "Tieni sotto controllo le tue cartelle e le partite di bingo",

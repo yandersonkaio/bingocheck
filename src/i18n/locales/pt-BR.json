@@ -3,6 +3,9 @@
   "app": {
     "tagline": "Seu bingo sob controle"
   },
+  "common": {
+    "developedBy": "Desenvolvido por"
+  },
   "home": {
     "title": "Início",
     "description": "Acompanhe suas cartelas e seus bingos",
