@@ -2,33 +2,42 @@ import { type BingoCard, db } from '@/lib/database'
 
 const FREE_POSITION = 12
 const TOTAL_POSITIONS = 25
-const TOTAL_NUMBERS = 24
 
-function validateCard(name: string, numbers: (number | null)[]) {
+function validateCard(
+  name: string,
+  numbers: (number | null)[],
+  freeCenter: boolean,
+) {
   const normalizedName = name.trim()
 
   if (!normalizedName) {
     throw new Error('Card name is required')
   }
 
-  if (numbers.length !== TOTAL_POSITIONS || numbers[FREE_POSITION] !== null) {
+  if (numbers.length !== TOTAL_POSITIONS) {
     throw new Error('Invalid card structure')
+  }
+
+  if (freeCenter && numbers[FREE_POSITION] !== null) {
+    throw new Error('Free center must be empty')
   }
 
   const selectedNumbers = numbers.filter(
     (number): number is number => number !== null,
   )
 
-  if (selectedNumbers.length !== TOTAL_NUMBERS) {
-    throw new Error('Card must contain 24 numbers')
+  const expectedNumbers = freeCenter ? 24 : 25
+
+  if (selectedNumbers.length !== expectedNumbers) {
+    throw new Error(`Card must contain ${expectedNumbers} numbers`)
   }
 
-  if (new Set(selectedNumbers).size !== TOTAL_NUMBERS) {
+  if (new Set(selectedNumbers).size !== expectedNumbers) {
     throw new Error('Card contains duplicate numbers')
   }
 
   const hasInvalidNumber = numbers.some((number, position) => {
-    if (position === FREE_POSITION) return false
+    if (position === FREE_POSITION && freeCenter) return false
 
     if (number === null || !Number.isInteger(number)) return true
 
@@ -49,14 +58,16 @@ function validateCard(name: string, numbers: (number | null)[]) {
 export async function createCard(
   name: string,
   numbers: (number | null)[],
+  freeCenter = true,
 ): Promise<string> {
-  const normalizedName = validateCard(name, numbers)
+  const normalizedName = validateCard(name, numbers, freeCenter)
   const now = new Date()
 
   const card: BingoCard = {
     id: crypto.randomUUID(),
     name: normalizedName,
     numbers: [...numbers],
+    freeCenter,
     createdAt: now,
     updatedAt: now,
   }
@@ -70,12 +81,14 @@ export async function updateCard(
   id: string,
   name: string,
   numbers: (number | null)[],
+  freeCenter = true,
 ): Promise<void> {
-  const normalizedName = validateCard(name, numbers)
+  const normalizedName = validateCard(name, numbers, freeCenter)
 
   const updated = await db.cards.update(id, {
     name: normalizedName,
     numbers: [...numbers],
+    freeCenter,
     updatedAt: new Date(),
   })
 
@@ -91,7 +104,11 @@ export async function duplicateCard(id: string): Promise<string> {
     throw new Error('Card not found')
   }
 
-  return createCard(`${original.name} (copy)`, original.numbers)
+  return createCard(
+    `${original.name} (copy)`,
+    original.numbers,
+    original.freeCenter ?? true,
+  )
 }
 
 export async function deleteCard(id: string): Promise<void> {

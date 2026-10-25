@@ -1,3 +1,4 @@
+import { Star } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,6 +27,9 @@ interface NumberPickerProps {
   usedNumbers: number[]
   onSelect: (number: number) => void
   onRemove: () => void
+  isCenterPosition?: boolean
+  isFreeCenter?: boolean
+  onSetFree?: () => void
 }
 
 const columns = ['B', 'I', 'N', 'G', 'O']
@@ -38,6 +42,9 @@ export function NumberPicker({
   usedNumbers,
   onSelect,
   onRemove,
+  isCenterPosition = false,
+  isFreeCenter = false,
+  onSetFree,
 }: NumberPickerProps) {
   const { t } = useTranslation()
 
@@ -91,13 +98,27 @@ export function NumberPicker({
   )
 
   const content = (
-    <NumberOptions
-      columnIndex={columnIndex}
-      currentNumber={currentNumber}
-      usedNumbers={usedNumbers}
-      onSelect={onSelect}
-      onRemove={onRemove}
-    />
+    <div className="flex flex-col gap-3">
+      <NumberOptions
+        columnIndex={columnIndex}
+        currentNumber={currentNumber}
+        usedNumbers={usedNumbers}
+        onSelect={onSelect}
+        onRemove={onRemove}
+      />
+
+      {isCenterPosition && (
+        <button
+          type="button"
+          onClick={onSetFree}
+          disabled={isFreeCenter}
+          className="border-border bg-card hover:bg-accent flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Star className="size-4" />
+          {t('cards.new.free')}
+        </button>
+      )}
+    </div>
   )
 
   if (isDesktop) {

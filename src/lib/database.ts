@@ -4,6 +4,7 @@ export interface BingoCard {
   id: string
   name: string
   numbers: (number | null)[]
+  freeCenter?: boolean
   createdAt: Date
   updatedAt: Date
 }

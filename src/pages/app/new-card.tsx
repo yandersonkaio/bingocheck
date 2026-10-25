@@ -10,7 +10,7 @@ import { createCard, updateCard } from '@/services/card-service'
 const columns = ['B', 'I', 'N', 'G', 'O']
 
 const FREE_POSITION = 12
-const TOTAL_NUMBERS = 24
+const TOTAL_POSITIONS = 25
 
 interface NewCardProps {
   initialCard?: BingoCard
@@ -31,24 +31,31 @@ export function NewCard({ initialCard }: NewCardProps) {
       : '/cards'
 
   const [cardName, setCardName] = useState(initialCard?.name ?? '')
+
   const [numbers, setNumbers] = useState<(number | null)[]>(() =>
-    initialCard ? [...initialCard.numbers] : Array(25).fill(null),
+    initialCard ? [...initialCard.numbers] : Array(TOTAL_POSITIONS).fill(null),
   )
+
+  const [freeCenter, setFreeCenter] = useState(initialCard?.freeCenter ?? true)
+
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
 
   const filledCount = numbers.filter((number) => number !== null).length
 
+  const completedCount = filledCount + (freeCenter ? 1 : 0)
+
   const usedNumbers = numbers.filter(
     (number): number is number => number !== null,
   )
 
-  const isComplete = filledCount === TOTAL_NUMBERS
-  const progressPercent = Math.round((filledCount / TOTAL_NUMBERS) * 100)
+  const isComplete = completedCount === TOTAL_POSITIONS
+
+  const progressPercent = Math.round((completedCount / TOTAL_POSITIONS) * 100)
 
   function handlePositionClick(position: number) {
-    if (position === FREE_POSITION || isSaving) return
+    if (isSaving) return
 
     setSelectedPosition(position)
   }
@@ -74,6 +81,10 @@ export function NewCard({ initialCard }: NewCardProps) {
       ),
     )
 
+    if (selectedPosition === FREE_POSITION) {
+      setFreeCenter(false)
+    }
+
     setSaveError(null)
     setSelectedPosition(null)
   }
@@ -87,6 +98,22 @@ export function NewCard({ initialCard }: NewCardProps) {
       ),
     )
 
+    if (selectedPosition === FREE_POSITION) {
+      setFreeCenter(false)
+    }
+
+    setSaveError(null)
+    setSelectedPosition(null)
+  }
+
+  function handleSetFreeCenter() {
+    if (selectedPosition !== FREE_POSITION || isSaving) return
+
+    setNumbers((previous) =>
+      previous.map((value, index) => (index === FREE_POSITION ? null : value)),
+    )
+
+    setFreeCenter(true)
     setSaveError(null)
     setSelectedPosition(null)
   }
@@ -94,13 +121,14 @@ export function NewCard({ initialCard }: NewCardProps) {
   function handleClearCard() {
     if (isSaving) return
 
-    setNumbers(Array(25).fill(null))
+    setNumbers(Array(TOTAL_POSITIONS).fill(null))
+    setFreeCenter(true)
     setSelectedPosition(null)
     setSaveError(null)
   }
 
   async function handleSaveCard() {
-    if (isSaving || filledCount !== TOTAL_NUMBERS) return
+    if (isSaving || !isComplete) return
 
     if (!cardName.trim()) {
       setSaveError(t('cards.new.nameRequired'))
@@ -112,9 +140,9 @@ export function NewCard({ initialCard }: NewCardProps) {
 
     try {
       if (initialCard) {
-        await updateCard(initialCard.id, cardName, numbers)
+        await updateCard(initialCard.id, cardName, numbers, freeCenter)
       } else {
-        await createCard(cardName, numbers)
+        await createCard(cardName, numbers, freeCenter)
       }
 
       navigate(returnTo)
@@ -188,16 +216,17 @@ export function NewCard({ initialCard }: NewCardProps) {
                 : 'bg-primary/10 text-primary'
             }`}
           >
-            {isComplete ? (
-              <span className="bg-primary-foreground size-1.5 rounded-full" />
-            ) : (
-              <span className="bg-primary size-1.5 animate-pulse rounded-full" />
-            )}
-            {filledCount}/{TOTAL_NUMBERS}
+            <span
+              className={`size-1.5 rounded-full ${
+                isComplete
+                  ? 'bg-primary-foreground'
+                  : 'bg-primary animate-pulse'
+              }`}
+            />
+            {completedCount}/{TOTAL_POSITIONS}
           </span>
         </div>
 
-        {/* Barra de progresso sutil */}
         <div
           aria-hidden
           className="bg-muted relative h-1 w-full overflow-hidden rounded-full"
@@ -223,23 +252,9 @@ export function NewCard({ initialCard }: NewCardProps) {
           ))}
 
           {numbers.map((number, position) => {
-            const isFree = position === FREE_POSITION
+            const isCenter = position === FREE_POSITION
+            const isFree = isCenter && freeCenter
             const isSelected = selectedPosition === position
-
-            if (isFree) {
-              return (
-                <div
-                  key={position}
-                  className="bg-primary/10 text-primary ring-primary/20 flex aspect-square flex-col items-center justify-center rounded-lg ring-1"
-                >
-                  <Star className="size-5" />
-
-                  <span className="mt-1 text-[9px] font-bold sm:text-xs">
-                    {t('cards.new.free')}
-                  </span>
-                </div>
-              )
-            }
 
             return (
               <button
@@ -247,18 +262,28 @@ export function NewCard({ initialCard }: NewCardProps) {
                 type="button"
                 onClick={() => handlePositionClick(position)}
                 disabled={isSaving}
-                className={`flex aspect-square items-center justify-center rounded-lg border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
+                className={`flex aspect-square cursor-pointer items-center justify-center rounded-lg border transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
                   isSelected
                     ? 'border-primary bg-primary/10 text-primary ring-primary/30 scale-105 ring-2'
-                    : number === null
-                      ? 'border-border bg-background hover:border-primary hover:bg-primary/5'
-                      : 'border-border bg-card hover:border-primary/50 hover:bg-primary/5'
+                    : isFree
+                      ? 'border-primary/20 bg-primary/10 text-primary'
+                      : number === null
+                        ? 'border-border bg-background hover:border-primary hover:bg-primary/5'
+                        : 'border-border bg-card hover:border-primary/50 hover:bg-primary/5'
                 }`}
                 aria-label={t('cards.new.selectPosition', {
                   position: position + 1,
                 })}
               >
-                {number === null ? (
+                {isFree ? (
+                  <span className="flex flex-col items-center justify-center">
+                    <Star className="size-5" />
+
+                    <span className="mt-1 text-[9px] font-bold sm:text-xs">
+                      {t('cards.new.free')}
+                    </span>
+                  </span>
+                ) : number === null ? (
                   <Plus className="text-muted-foreground size-5" />
                 ) : (
                   <span className="text-lg font-semibold">{number}</span>
@@ -271,14 +296,14 @@ export function NewCard({ initialCard }: NewCardProps) {
         <div className="relative flex items-center justify-between gap-3">
           <span className="text-muted-foreground text-xs">
             {t('cards.new.remaining', {
-              count: TOTAL_NUMBERS - filledCount,
+              count: TOTAL_POSITIONS - completedCount,
             })}
           </span>
 
           <button
             type="button"
             onClick={handleClearCard}
-            disabled={filledCount === 0 || isSaving}
+            disabled={(filledCount === 0 && freeCenter) || isSaving}
             className="text-muted-foreground hover:bg-accent hover:text-foreground inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <RotateCcw className="size-3.5" />
@@ -331,6 +356,9 @@ export function NewCard({ initialCard }: NewCardProps) {
         usedNumbers={usedNumbers}
         onSelect={handleNumberSelect}
         onRemove={handleNumberRemove}
+        isCenterPosition={selectedPosition === FREE_POSITION}
+        isFreeCenter={freeCenter}
+        onSetFree={handleSetFreeCenter}
       />
     </div>
   )
