@@ -24,23 +24,21 @@ function CardPreview({ numbers }: { numbers: BingoCard['numbers'] }) {
         </div>
       ))}
 
-      {numbers.map((number, position) => (
-        <div
-          key={position}
-          className={`flex h-7 items-center justify-center rounded text-xs font-semibold ${
-            position === FREE_POSITION
-              ? 'bg-primary/10 text-primary'
-              : 'bg-muted text-foreground'
-          }`}
-          title={
-            position === FREE_POSITION
-              ? t('cards.new.free')
-              : String(number ?? '')
-          }
-        >
-          {position === FREE_POSITION ? <Star className="size-3.5" /> : number}
-        </div>
-      ))}
+      {numbers.map((number, position) => {
+        const isFree = position === FREE_POSITION && number === null
+
+        return (
+          <div
+            key={position}
+            className={`flex h-7 items-center justify-center rounded text-xs font-semibold ${
+              isFree ? 'bg-primary/10 text-primary' : 'bg-muted text-foreground'
+            }`}
+            title={isFree ? t('cards.new.free') : String(number ?? '')}
+          >
+            {isFree ? <Star className="size-3.5" /> : number}
+          </div>
+        )
+      })}
     </div>
   )
 }
