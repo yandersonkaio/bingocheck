@@ -235,7 +235,9 @@
         "rulesSaveError": "Could not update the rules. Please try again.",
         "cancelRules": "Cancel",
         "saveRules": "Save changes",
-        "savingRules": "Saving..."
+        "savingRules": "Saving...",
+        "showPreviousNumbers": "Show {{count}} previous numbers",
+        "hidePreviousNumbers": "Hide previous numbers"
       },
       "new": {
         "title": "New round",

@@ -235,7 +235,9 @@
         "rulesSaveError": "Não foi possível atualizar as regras. Tente novamente.",
         "cancelRules": "Cancelar",
         "saveRules": "Salvar alterações",
-        "savingRules": "Salvando..."
+        "savingRules": "Salvando...",
+        "showPreviousNumbers": "Mostrar {{count}} anteriores",
+        "hidePreviousNumbers": "Ocultar anteriores"
       },
       "new": {
         "title": "Nova rodada",

@@ -13,7 +13,7 @@ import {
   Ticket,
   Trophy,
 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 
@@ -27,6 +27,13 @@ import {
 } from '@/services/round-service'
 
 const availableRules: RoundRule[] = ['line', 'column', 'diagonal', 'full_card']
+
+function getVisibleHistoryCount() {
+  if (typeof window === 'undefined') return 5
+  if (window.innerWidth >= 768) return 10
+  if (window.innerWidth >= 640) return 8
+  return 5
+}
 
 const columns = ['B', 'I', 'N', 'G', 'O'] as const
 
@@ -94,10 +101,23 @@ export function RoundDetails() {
   const [error, setError] = useState<string | null>(null)
   const [showFinishConfirmation, setShowFinishConfirmation] = useState(false)
   const [expandedCards, setExpandedCards] = useState<string[]>([])
+  const [showFullHistory, setShowFullHistory] = useState(false)
+  const [visibleHistoryCount, setVisibleHistoryCount] = useState(
+    getVisibleHistoryCount,
+  )
   const [activeLetter, setActiveLetter] = useState<BingoLetter | null>(null)
   const [editingRules, setEditingRules] = useState(false)
   const [selectedRules, setSelectedRules] = useState<RoundRule[]>([])
   const [rulesError, setRulesError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      setVisibleHistoryCount(getVisibleHistoryCount())
+    }
+
+    window.addEventListener('resize', updateVisibleCount)
+    return () => window.removeEventListener('resize', updateVisibleCount)
+  }, [])
 
   const bingo = useLiveQuery(
     () => (id ? db.bingos.get(id).then((result) => result ?? null) : null),
@@ -132,6 +152,17 @@ export function RoundDetails() {
     () => round?.drawnNumbers ?? [],
     [round?.drawnNumbers],
   )
+
+  const hiddenHistoryCount = Math.max(
+    0,
+    drawnNumbers.length - visibleHistoryCount,
+  )
+
+  const visibleHistory = showFullHistory
+    ? drawnNumbers
+    : drawnNumbers.slice(-visibleHistoryCount)
+
+  const historyStartIndex = showFullHistory ? 0 : hiddenHistoryCount
 
   const drawnSet = useMemo(() => new Set(drawnNumbers), [drawnNumbers])
 
@@ -680,36 +711,75 @@ export function RoundDetails() {
             })}
           </div>
         ) : (
-          <ol className="grid grid-cols-5 gap-1.5 sm:grid-cols-8 md:grid-cols-10">
-            {drawnNumbers.map((number, index) => {
-              const isLast = index === drawnNumbers.length - 1
+          <div className="flex flex-col gap-3">
+            {!showFullHistory && hiddenHistoryCount > 0 && (
+              <div className="flex items-center gap-2">
+                <div className="bg-border h-px flex-1" />
 
-              return (
-                <li
-                  key={`${index}-${number}`}
-                  className={`flex aspect-square flex-col items-center justify-center gap-0.5 rounded-sm transition-colors ${
-                    isLast
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'bg-muted text-foreground'
-                  }`}
+                <button
+                  type="button"
+                  onClick={() => setShowFullHistory(true)}
+                  className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-1.5 px-2 py-1 text-xs font-medium transition-colors"
                 >
-                  <span
-                    className={`text-[9px] font-medium tabular-nums ${
+                  <ChevronDown className="size-3.5" />
+                  {t('bingos.rounds.details.showPreviousNumbers', {
+                    count: hiddenHistoryCount,
+                  })}
+                </button>
+
+                <div className="bg-border h-px flex-1" />
+              </div>
+            )}
+
+            <ol className="grid grid-cols-5 gap-1.5 sm:grid-cols-8 md:grid-cols-10">
+              {visibleHistory.map((number, index) => {
+                const originalIndex = historyStartIndex + index
+                const isLast = originalIndex === drawnNumbers.length - 1
+
+                return (
+                  <li
+                    key={`${originalIndex}-${number}`}
+                    className={`flex aspect-square flex-col items-center justify-center gap-0.5 rounded-sm transition-colors ${
                       isLast
-                        ? 'text-primary-foreground/70'
-                        : 'text-muted-foreground'
+                        ? 'bg-primary text-primary-foreground shadow-sm'
+                        : 'bg-muted text-foreground'
                     }`}
                   >
-                    {index + 1}º
-                  </span>
+                    <span
+                      className={`text-[9px] font-medium tabular-nums ${
+                        isLast
+                          ? 'text-primary-foreground/70'
+                          : 'text-muted-foreground'
+                      }`}
+                    >
+                      {originalIndex + 1}º
+                    </span>
 
-                  <span className="text-xs font-semibold tabular-nums sm:text-sm">
-                    {displayColumns[Math.floor((number - 1) / 15)]}-{number}
-                  </span>
-                </li>
-              )
-            })}
-          </ol>
+                    <span className="text-xs font-semibold tabular-nums sm:text-sm">
+                      {displayColumns[Math.floor((number - 1) / 15)]}-{number}
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
+
+            {showFullHistory && hiddenHistoryCount > 0 && (
+              <div className="flex items-center gap-2">
+                <div className="bg-border h-px flex-1" />
+
+                <button
+                  type="button"
+                  onClick={() => setShowFullHistory(false)}
+                  className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-1.5 px-2 py-1 text-xs font-medium transition-colors"
+                >
+                  <ChevronUp className="size-3.5" />
+                  {t('bingos.rounds.details.hidePreviousNumbers')}
+                </button>
+
+                <div className="bg-border h-px flex-1" />
+              </div>
+            )}
+          </div>
         )}
       </section>
 

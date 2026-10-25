@@ -235,7 +235,9 @@
         "rulesSaveError": "No se pudieron actualizar las reglas. Inténtalo de nuevo.",
         "cancelRules": "Cancelar",
         "saveRules": "Guardar cambios",
-        "savingRules": "Guardando..."
+        "savingRules": "Guardando...",
+        "showPreviousNumbers": "Mostrar {{count}} números anteriores",
+        "hidePreviousNumbers": "Ocultar anteriores"
       },
       "new": {
         "title": "Nueva ronda",

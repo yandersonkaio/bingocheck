@@ -235,7 +235,9 @@
         "rulesSaveError": "Impossibile aggiornare le regole. Riprova.",
         "cancelRules": "Annulla",
         "saveRules": "Salva modifiche",
-        "savingRules": "Salvataggio..."
+        "savingRules": "Salvataggio...",
+        "showPreviousNumbers": "Mostra {{count}} numeri precedenti",
+        "hidePreviousNumbers": "Nascondi i numeri precedenti"
       },
       "new": {
         "title": "Nuovo turno",
