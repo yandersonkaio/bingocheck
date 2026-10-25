@@ -146,7 +146,16 @@
       "title": "Edit bingo",
       "description": "Update the bingo name and date.",
       "save": "Save changes",
-      "saveError": "Could not update the bingo. Please try again."
+      "saveError": "Could not update the bingo. Please try again.",
+      "columnLabels": "Card header",
+      "columnLabelsDescription": "Tap a letter to customize this bingo's card header.",
+      "restoreDefault": "Restore default",
+      "editColumn": "Edit column {{number}} letter",
+      "selectLetter": "Select letter for column {{number}}",
+      "closeLetterSelector": "Close letter selection",
+      "removeLetter": "Remove letter",
+      "columnLabelsIncomplete": "Select a letter for each column.",
+      "columnLabelsInvalid": "The header must contain five different letters."
     },
     "delete": {
       "title": "Delete bingo?",

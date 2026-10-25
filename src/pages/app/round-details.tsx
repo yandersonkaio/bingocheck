@@ -52,10 +52,6 @@ interface CardProgress {
   winningRule: RoundRule | null
 }
 
-function getLetter(number: number): BingoLetter {
-  return columns[Math.floor((number - 1) / 15)]
-}
-
 function calculateProgress(
   card: BingoCard,
   drawnNumbers: Set<number>,
@@ -146,6 +142,8 @@ export function RoundDetails() {
         .sort((a, b) => a.remaining - b.remaining),
     [cards, drawnSet, round?.rules],
   )
+
+  const displayColumns = (bingo?.columnLabels ?? 'BINGO').split('')
 
   const isFinished = round?.status === 'finished'
   const lastNumber = drawnNumbers[drawnNumbers.length - 1]
@@ -477,7 +475,7 @@ export function RoundDetails() {
 
         <div className="text-primary relative text-4xl font-bold tabular-nums">
           {lastNumber !== undefined
-            ? `${getLetter(lastNumber)} ${lastNumber}`
+            ? `${displayColumns[Math.floor((lastNumber - 1) / 15)]} ${lastNumber}`
             : '—'}
         </div>
 
@@ -582,7 +580,9 @@ export function RoundDetails() {
                     : 'bg-card border-border hover:border-primary/50 hover:shadow-sm'
                 }`}
               >
-                <span className="text-2xl font-bold">{letter}</span>
+                <span className="text-2xl font-bold">
+                  {displayColumns[columnIndex]}
+                </span>
 
                 <span className="text-muted-foreground text-[10px] font-medium tabular-nums sm:text-xs">
                   {start}–{end}
@@ -614,8 +614,8 @@ export function RoundDetails() {
           >
             <div className="mb-3 flex items-center justify-between gap-3">
               <p className="text-sm font-semibold">
-                {activeLetter} · {activeColumnIndex * 15 + 1}–
-                {(activeColumnIndex + 1) * 15}
+                {displayColumns[activeColumnIndex]} ·{' '}
+                {activeColumnIndex * 15 + 1}–{(activeColumnIndex + 1) * 15}
               </p>
 
               <button
@@ -643,7 +643,7 @@ export function RoundDetails() {
                     onClick={() => handleRegisterNumber(number)}
                     disabled={isFinished || isSaving || isDrawn}
                     aria-pressed={isDrawn}
-                    aria-label={`${activeLetter} ${number}`}
+                    aria-label={`${displayColumns[activeColumnIndex]} ${number}`}
                     className={`flex aspect-square items-center justify-center rounded-lg border text-sm font-semibold tabular-nums transition-all sm:text-base ${
                       isDrawn
                         ? 'border-primary bg-primary text-primary-foreground shadow-sm'
@@ -704,7 +704,7 @@ export function RoundDetails() {
                   </span>
 
                   <span className="text-xs font-semibold tabular-nums sm:text-sm">
-                    {getLetter(number)}-{number}
+                    {displayColumns[Math.floor((number - 1) / 15)]}-{number}
                   </span>
                 </li>
               )
@@ -822,12 +822,12 @@ export function RoundDetails() {
                   )}
 
                   <div className="mx-auto grid max-w-sm grid-cols-5 gap-1.5">
-                    {columns.map((letter) => (
+                    {columns.map((letter, index) => (
                       <div
                         key={letter}
                         className="bg-primary/10 text-primary rounded-md py-2 text-center text-sm font-bold"
                       >
-                        {letter}
+                        {displayColumns[index]}
                       </div>
                     ))}
 

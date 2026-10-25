@@ -9,6 +9,7 @@ interface CreateBingoData {
 interface UpdateBingoData {
   name: string
   date: string | null
+  columnLabels?: string
 }
 
 function validateBingoDetails(name: string, date: string | null) {
@@ -23,6 +24,20 @@ function validateBingoDetails(name: string, date: string | null) {
   }
 
   return normalizedName
+}
+
+function validateColumnLabels(labels: string): string {
+  const normalized = labels.trim().toUpperCase()
+
+  if (!/^[A-Z]{5}$/.test(normalized)) {
+    throw new Error('Column labels must contain exactly five letters')
+  }
+
+  if (new Set(normalized).size !== 5) {
+    throw new Error('Column labels must not contain repeated letters')
+  }
+
+  return normalized
 }
 
 export async function createBingo({
@@ -44,6 +59,7 @@ export async function createBingo({
     name: normalizedName,
     date,
     cardIds: uniqueCardIds,
+    columnLabels: 'BINGO',
     status: 'not_started',
     createdAt: now,
     updatedAt: now,
@@ -55,9 +71,12 @@ export async function createBingo({
 
 export async function updateBingo(
   bingoId: string,
-  { name, date }: UpdateBingoData,
+  { name, date, columnLabels }: UpdateBingoData,
 ): Promise<void> {
   const normalizedName = validateBingoDetails(name, date)
+
+  const normalizedLabels =
+    columnLabels === undefined ? undefined : validateColumnLabels(columnLabels)
 
   await db.transaction('rw', db.bingos, async () => {
     const bingo = await db.bingos.get(bingoId)
@@ -66,6 +85,9 @@ export async function updateBingo(
     await db.bingos.update(bingoId, {
       name: normalizedName,
       date,
+      ...(normalizedLabels !== undefined && {
+        columnLabels: normalizedLabels,
+      }),
       updatedAt: new Date(),
     })
   })

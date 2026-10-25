@@ -146,7 +146,16 @@
       "title": "Modifica bingo",
       "description": "Aggiorna il nome e la data del bingo.",
       "save": "Salva modifiche",
-      "saveError": "Impossibile aggiornare il bingo. Riprova."
+      "saveError": "Impossibile aggiornare il bingo. Riprova.",
+      "columnLabels": "Intestazione delle cartelle",
+      "columnLabelsDescription": "Tocca una lettera per personalizzare l'intestazione di questo bingo.",
+      "restoreDefault": "Ripristina predefinito",
+      "editColumn": "Modifica la lettera della colonna {{number}}",
+      "selectLetter": "Seleziona la lettera della colonna {{number}}",
+      "closeLetterSelector": "Chiudi selezione lettere",
+      "removeLetter": "Rimuovi lettera",
+      "columnLabelsIncomplete": "Seleziona una lettera per ogni colonna.",
+      "columnLabelsInvalid": "L'intestazione deve contenere cinque lettere diverse."
     },
     "delete": {
       "title": "Eliminare il bingo?",

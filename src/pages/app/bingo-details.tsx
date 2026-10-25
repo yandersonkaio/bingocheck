@@ -447,6 +447,18 @@ export function BingoDetails() {
                 })}
               </span>
             </div>
+            <div className="mt-3 flex gap-1.5">
+              {(bingo.columnLabels ?? 'BINGO')
+                .split('')
+                .map((letter, index) => (
+                  <span
+                    key={index}
+                    className="bg-primary/10 text-primary flex size-8 items-center justify-center rounded-lg text-sm font-bold"
+                  >
+                    {letter}
+                  </span>
+                ))}
+            </div>
           </div>
 
           <BingoStatusBadge status={bingo.status} />

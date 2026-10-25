@@ -15,6 +15,7 @@ export interface Bingo {
   name: string
   date: string | null
   cardIds: string[]
+  columnLabels?: string
   status: BingoStatus
   createdAt: Date
   updatedAt: Date

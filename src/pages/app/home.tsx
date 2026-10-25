@@ -270,12 +270,10 @@ export function Home() {
                 {t('home.activeRound.lastNumber')}
               </span>
 
-              <div className="bg-primary/15 flex size-10 shrink-0 items-center justify-center rounded-full">
+              <div className="bg-primary/15 flex size-12 shrink-0 items-center justify-center rounded-full">
                 <span className="text-primary text-sm font-bold tabular-nums">
                   {latestActiveRound.drawnNumbers.length > 0
-                    ? latestActiveRound.drawnNumbers[
-                        latestActiveRound.drawnNumbers.length - 1
-                      ]
+                    ? `${(activeRoundBingo.columnLabels ?? 'BINGO')[Math.floor((latestActiveRound.drawnNumbers[latestActiveRound.drawnNumbers.length - 1] - 1) / 15)]}-${latestActiveRound.drawnNumbers[latestActiveRound.drawnNumbers.length - 1]}`
                     : '—'}
                 </span>
               </div>

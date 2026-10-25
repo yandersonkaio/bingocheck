@@ -146,7 +146,16 @@
       "title": "Editar bingo",
       "description": "Actualiza el nombre y la fecha del bingo.",
       "save": "Guardar cambios",
-      "saveError": "No se pudo actualizar el bingo. Inténtalo de nuevo."
+      "saveError": "No se pudo actualizar el bingo. Inténtalo de nuevo.",
+      "columnLabels": "Encabezado de los cartones",
+      "columnLabelsDescription": "Toca una letra para personalizar el encabezado de este bingo.",
+      "restoreDefault": "Restaurar predeterminado",
+      "editColumn": "Editar letra de la columna {{number}}",
+      "selectLetter": "Seleccionar letra de la columna {{number}}",
+      "closeLetterSelector": "Cerrar selección de letras",
+      "removeLetter": "Eliminar letra",
+      "columnLabelsIncomplete": "Selecciona una letra para cada columna.",
+      "columnLabelsInvalid": "El encabezado debe contener cinco letras diferentes."
     },
     "delete": {
       "title": "¿Eliminar bingo?",
